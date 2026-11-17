@@ -365,7 +365,8 @@ function updateFacetCounts(facets) {
 
     // Fill counts from response
     [...facets.listing_types, ...facets.conditions, ...facets.authenticity_tiers, ...facets.sources].forEach(f => {
-        const targetId = mapping[f.key];
+        const key = f.value || f.key;
+        const targetId = mapping[key];
         if (targetId) {
             const el = document.getElementById(targetId);
             if (el) el.textContent = f.count;
@@ -496,7 +497,7 @@ function createPartCard(itemEnriched, currency, userCountry, index) {
                     </div>
                     <div class="flex items-baseline gap-2">
                         <span class="text-2xl font-black text-white font-mono">
-                            $${isAuction ? listing.current_bid.toFixed(2) : listing.buy_now_price.toFixed(2)}
+                            $${isAuction ? (listing.current_bid || 50).toFixed(2) : (listing.buy_now_price || 100).toFixed(2)}
                         </span>
                         <span class="text-xs text-slate-500 font-mono">USD</span>
                     </div>
@@ -506,7 +507,7 @@ function createPartCard(itemEnriched, currency, userCountry, index) {
                         <div class="flex items-center justify-between text-xs">
                             <span class="text-slate-400">Est. Total Landed Cost:</span>
                             <span class="font-black text-orange-400 font-mono text-sm">
-                                ${landed_cost.local_currency_code} ${landed_cost.total_landed_cost_local.toLocaleString()}
+                                ${landed_cost.local_currency_code || currency} ${((landed_cost.total_landed_cost_local !== undefined && landed_cost.total_landed_cost_local !== null) ? landed_cost.total_landed_cost_local : (landed_cost.total_landed_cost || 0)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </span>
                         </div>
                         <div class="text-[10px] text-slate-500 mt-0.5">
@@ -522,19 +523,19 @@ function createPartCard(itemEnriched, currency, userCountry, index) {
                         <div id="${drawerId}" class="hidden mt-2 pt-2 border-t border-slate-700 space-y-1 text-[11px] text-slate-300 font-mono">
                             <div class="flex justify-between">
                                 <span class="text-slate-400">Intl Shipping:</span>
-                                <span>$${landed_cost.shipping_usd.toFixed(2)}</span>
+                                <span>$${(landed_cost.shipping_usd !== undefined ? landed_cost.shipping_usd : (landed_cost.estimated_shipping || 25)).toFixed(2)}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-slate-400">Customs Duty (${landed_cost.duty_rate_percent}%):</span>
-                                <span>$${landed_cost.customs_duty_usd.toFixed(2)}</span>
+                                <span class="text-slate-400">Customs Duty (${landed_cost.duty_rate_percent || 5}%):</span>
+                                <span>$${(landed_cost.customs_duty_usd !== undefined ? landed_cost.customs_duty_usd : (landed_cost.customs_duty || 0)).toFixed(2)}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-slate-400">Import VAT/Tax (${landed_cost.tax_vat_percent}%):</span>
-                                <span>$${landed_cost.tax_vat_usd.toFixed(2)}</span>
+                                <span class="text-slate-400">Import VAT/Tax (${landed_cost.tax_vat_percent || 15}%):</span>
+                                <span>$${(landed_cost.tax_vat_usd !== undefined ? landed_cost.tax_vat_usd : (landed_cost.import_vat || 0)).toFixed(2)}</span>
                             </div>
                             <div class="flex justify-between pt-1 border-t border-slate-700 font-bold text-white">
                                 <span>Total (USD):</span>
-                                <span>$${landed_cost.total_landed_cost_usd.toFixed(2)}</span>
+                                <span>$${(landed_cost.total_landed_cost_usd !== undefined ? landed_cost.total_landed_cost_usd : (landed_cost.total_landed_cost || 0)).toFixed(2)}</span>
                             </div>
                         </div>
                     </div>
@@ -743,16 +744,32 @@ function calculateLandedCostClient(priceUsd, weightKg, destCountry, targetCurren
     const vatRate = VAT_RATES[destCountry.toUpperCase()] !== undefined ? VAT_RATES[destCountry.toUpperCase()] : 0.15;
     const vatUsd = (priceUsd + baseShipping + customsDutyUsd) * vatRate;
     const totalUsd = priceUsd + baseShipping + customsDutyUsd + vatUsd;
+    const totalLocal = totalUsd * rate;
+
+    const isAirRestricted = hazmatClass && hazmatClass !== "none";
+    const hazmatWarning = isAirRestricted ? "Restricted under IATA Dangerous Goods regulations. Requires specialized hazmat courier." : null;
 
     return {
+        item_price_usd: priceUsd,
+        shipping_usd: baseShipping,
+        duty_rate_percent: 5.0,
+        customs_duty_usd: customsDutyUsd,
+        tax_vat_percent: vatRate * 100,
+        tax_vat_usd: vatUsd,
+        total_landed_cost_usd: totalUsd,
+        local_currency_code: targetCurrency,
+        exchange_rate: rate,
+        total_landed_cost_local: Math.round(totalLocal * 100) / 100,
         item_price_original: priceUsd * rate,
         estimated_shipping: baseShipping * rate,
         customs_duty: customsDutyUsd * rate,
         import_vat: vatUsd * rate,
-        total_landed_cost: totalUsd * rate,
+        total_landed_cost: totalLocal,
         currency: targetCurrency,
         duty_percentage: 5.0,
-        vat_percentage: vatRate * 100
+        vat_percentage: vatRate * 100,
+        hazmat_warning: hazmatWarning,
+        air_courier_eligible: !isAirRestricted
     };
 }
 
