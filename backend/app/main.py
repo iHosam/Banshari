@@ -33,6 +33,18 @@ static_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file
 if os.path.exists(static_dir):
     app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
+    @app.get("/styles.css")
+    def serve_styles():
+        return FileResponse(os.path.join(static_dir, "styles.css"))
+
+    @app.get("/catalog.js")
+    def serve_catalog_js():
+        return FileResponse(os.path.join(static_dir, "catalog.js"))
+
+    @app.get("/app.js")
+    def serve_app_js():
+        return FileResponse(os.path.join(static_dir, "app.js"))
+
     @app.get("/")
     def serve_frontend():
         return FileResponse(os.path.join(static_dir, "index.html"))

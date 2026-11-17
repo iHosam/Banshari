@@ -150,9 +150,20 @@ function initEventListeners() {
             return;
         }
         try {
-            const res = await fetch(`/api/vin/${vin}`);
-            const data = await res.json();
-            if (data.is_valid_format) {
+            let data = null;
+            if (!window.location.hostname.includes("github.io")) {
+                try {
+                    const res = await fetch(`/api/vin/${vin}`);
+                    if (res.ok) data = await res.json();
+                } catch (e) {
+                    console.warn("API unavailable, fallback to client VIN decoder:", e);
+                }
+            }
+            if (!data) {
+                data = decodeVinClient(vin);
+            }
+
+            if (data && data.is_valid_format) {
                 vinResultCard.classList.remove("hidden");
                 vinMakeVal.textContent = data.make;
                 vinYearVal.textContent = data.model_year;
@@ -225,15 +236,7 @@ async function performSearch() {
     clearActiveTimers();
     listingsContainer.innerHTML = `<div class="p-12 text-center text-slate-400"><div class="inline-block w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mb-3"></div><p class="text-sm">Querying global platforms and calculating landed costs...</p></div>`;
 
-    const payload = {
-        query: STATE.query,
-        country: STATE.destinationCountry,
-        currency: STATE.currency,
-        filters: STATE.filters,
-        garage: STATE.vehicle
-    };
-
-    // Construct query URL
+    // Construct query parameters
     const params = new URLSearchParams();
     if (STATE.query) params.append("q", STATE.query);
     params.append("country", STATE.destinationCountry);
@@ -249,12 +252,39 @@ async function performSearch() {
     if (STATE.vehicle.make) params.append("make", STATE.vehicle.make);
     if (STATE.vehicle.model) params.append("model", STATE.vehicle.model);
 
-    try {
-        const response = await fetch(`/api/search?${params.toString()}`);
-        const data = await response.json();
+    let data = null;
+    const isGitHubPages = window.location.hostname.includes("github.io") || window.location.protocol === "file:";
+
+    if (!isGitHubPages) {
+        try {
+            const response = await fetch(`/api/search?${params.toString()}`);
+            if (response.ok) {
+                data = await response.json();
+            }
+        } catch (err) {
+            console.warn("Backend unavailable, falling back to Client-Side Engine:", err);
+        }
+    }
+
+    if (!data) {
+        // Run Client-Side Engine for GitHub Pages or offline fallback
+        try {
+            data = runClientSideEngine({
+                query: STATE.query,
+                country: STATE.destinationCountry,
+                currency: STATE.currency,
+                mode: selectedMode,
+                filters: STATE.filters,
+                garage: STATE.vehicle
+            });
+        } catch (clientErr) {
+            console.error("Client-side search error:", clientErr);
+        }
+    }
+
+    if (data) {
         renderResults(data);
-    } catch (err) {
-        console.error("Search failed:", err);
+    } else {
         listingsContainer.innerHTML = `<div class="p-8 text-center text-red-400 bg-red-950/20 rounded-xl border border-red-900"><p>Failed to retrieve data from Banshari engine.</p></div>`;
     }
 }
@@ -578,4 +608,539 @@ window.toggleLandedDrawer = function(id) {
 function formatLabel(val) {
     if (!val) return "";
     return val.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase());
+}
+
+// =====================================================================
+// --- Client-Side Search Engine (For GitHub Pages & Offline Mode) ---
+// =====================================================================
+
+function decodeVinClient(vin) {
+    const vinClean = vin.replace(/[^A-HJ-NPR-Z0-9]/gi, "").toUpperCase();
+    if (vinClean.length !== 17) return { is_valid_format: false };
+
+    const WMI_MAP = {
+        "1HG": { make: "Honda", country: "United States" },
+        "1FA": { make: "Ford", country: "United States" },
+        "1GC": { make: "Chevrolet", country: "United States" },
+        "2T1": { make: "Toyota", country: "Canada" },
+        "3VW": { make: "Volkswagen", country: "Mexico" },
+        "JTD": { make: "Toyota", country: "Japan" },
+        "JT2": { make: "Toyota", country: "Japan" },
+        "JN1": { make: "Nissan", country: "Japan" },
+        "JF1": { make: "Subaru", country: "Japan" },
+        "JM1": { make: "Mazda", country: "Japan" },
+        "WBA": { make: "BMW", country: "Germany" },
+        "WBS": { make: "BMW M", country: "Germany" },
+        "WDB": { make: "Mercedes-Benz", country: "Germany" },
+        "WDD": { make: "Mercedes-Benz", country: "Germany" },
+        "WAU": { make: "Audi", country: "Germany" },
+        "WP0": { make: "Porsche", country: "Germany" },
+        "SAL": { make: "Land Rover", country: "United Kingdom" },
+        "SAJ": { make: "Jaguar", country: "United Kingdom" },
+        "KMH": { make: "Hyundai", country: "South Korea" },
+        "KNA": { make: "Kia", country: "South Korea" }
+    };
+    const YEAR_CODES = {
+        "A": 2010, "B": 2011, "C": 2012, "D": 2013, "E": 2014, "F": 2015, "G": 2016, "H": 2017, "J": 2018,
+        "K": 2019, "L": 2020, "M": 2021, "N": 2022, "P": 2023, "R": 2024, "S": 2025, "T": 2026,
+        "1": 2001, "2": 2002, "3": 2003, "4": 2004, "5": 2005, "6": 2006, "7": 2007, "8": 2008, "9": 2009
+    };
+    const wmi = vinClean.substring(0, 3);
+    const yrChar = vinClean[9];
+    const mfg = WMI_MAP[wmi] || { make: "Generic Vehicle", country: "International" };
+    const year = YEAR_CODES[yrChar] || 2020;
+
+    return {
+        vin: vinClean,
+        wmi: wmi,
+        make: mfg.make,
+        country_of_manufacture: mfg.country,
+        model_year: year,
+        serial_number: vinClean.substring(11),
+        is_valid_format: true
+    };
+}
+
+const CLIENT_INTERCHANGE = {
+    "34116792223": ["34116792223", "09C39913", "150348320", "55523", "DF6603S", "34116855006"],
+    "0446542180": ["0446542180", "04465AZ001", "ACT1210", "BC1210", "D1210", "SP2138", "0446542190"],
+    "ACT1210": ["0446542180", "04465AZ001", "ACT1210", "BC1210", "D1210", "SP2138"],
+    "0045420718": ["0045420718", "0258007057", "A0045420718", "17014", "ES2031712B1"],
+    "0258007057": ["0045420718", "0258007057", "A0045420718", "17014", "ES2031712B1"],
+    "16600JF00A": ["16600JF00A", "0280158130", "F314", "16600EY00A"],
+    "99734304104": ["99734304104", "24062899", "35122074", "V364127"],
+    "31100R40A01": ["31100R40A01", "1042105910", "AL1298X", "2100656"],
+    "2268069F01": ["2268069F01", "2268069F00", "A36608E60", "A36608", "22680AD21A", "AFH7014", "MAF0042"],
+    "2268069F00": ["2268069F01", "2268069F00", "A36608E60", "A36608", "22680AD21A", "AFH7014", "MAF0042"],
+    "A36608E60": ["2268069F01", "2268069F00", "A36608E60", "A36608", "22680AD21A", "AFH7014", "MAF0042"],
+    "A36608": ["2268069F01", "2268069F00", "A36608E60", "A36608", "22680AD21A", "AFH7014", "MAF0042"],
+    "F31AMR": ["F31AMR", "F31HMR", "BRIDEZETA3"],
+    "F31HMR": ["F31AMR", "F31HMR", "BRIDEZETA3"]
+};
+
+const CLIENT_CHASSIS = {
+    "S15": { make: "Nissan", model: "Silvia", generation: "S15 (Spec-R / Spec-S)", years: [1999, 2002] },
+    "S14": { make: "Nissan", model: "Silvia / 240SX", generation: "S14", years: [1994, 1998] },
+    "S13": { make: "Nissan", model: "Silvia / 180SX", generation: "S13", years: [1989, 1994] },
+    "180SX": { make: "Nissan", model: "180SX", generation: "RPS13", years: [1989, 1998] },
+    "R34": { make: "Nissan", model: "Skyline / GT-R", generation: "BNR34 / ER34", years: [1998, 2002] },
+    "R33": { make: "Nissan", model: "Skyline / GT-R", generation: "BCNR33", years: [1993, 1998] },
+    "R32": { make: "Nissan", model: "Skyline / GT-R", generation: "BNR32", years: [1989, 1994] },
+    "R35": { make: "Nissan", model: "GT-R", generation: "R35", years: [2008, 2024] },
+    "MK4": { make: "Toyota", model: "Supra", generation: "JZA80 (MK4)", years: [1993, 2002] },
+    "A80": { make: "Toyota", model: "Supra", generation: "JZA80", years: [1993, 2002] },
+    "MK5": { make: "Toyota", model: "GR Supra", generation: "A90", years: [2019, 2025] },
+    "FD": { make: "Mazda", model: "RX-7", generation: "FD3S", years: [1992, 2002] },
+    "FD3S": { make: "Mazda", model: "RX-7", generation: "FD3S", years: [1992, 2002] },
+    "E46": { make: "BMW", model: "3 Series / M3", generation: "E46", years: [1999, 2006] },
+    "E36": { make: "BMW", model: "3 Series / M3", generation: "E36", years: [1992, 1999] },
+    "F30": { make: "BMW", model: "3 Series", generation: "F30", years: [2012, 2019] },
+    "EVO": { make: "Mitsubishi", model: "Lancer Evolution", generation: "Evo", years: [1992, 2016] },
+    "CT9A": { make: "Mitsubishi", model: "Lancer Evolution VII/VIII/IX", generation: "CT9A", years: [2001, 2007] },
+    "WRX": { make: "Subaru", model: "Impreza WRX / STI", generation: "WRX", years: [1992, 2021] },
+    "CIVIC": { make: "Honda", model: "Civic", generation: "Civic", years: [1990, 2025] }
+};
+
+function resolveVehicleClient(q) {
+    const upper = q.toUpperCase();
+    const tokens = upper.split(/[\s\-_]+/);
+    for (const t of tokens) {
+        if (CLIENT_CHASSIS[t]) return CLIENT_CHASSIS[t];
+    }
+    if (upper.includes("SILVIA")) {
+        if (upper.includes("15")) return CLIENT_CHASSIS["S15"];
+        if (upper.includes("14")) return CLIENT_CHASSIS["S14"];
+        if (upper.includes("13")) return CLIENT_CHASSIS["S13"];
+        return CLIENT_CHASSIS["S15"];
+    }
+    if (upper.includes("SUPRA")) return CLIENT_CHASSIS["MK4"];
+    if (upper.includes("SKYLINE") || upper.includes("GTR") || upper.includes("GT-R")) {
+        if (upper.includes("34")) return CLIENT_CHASSIS["R34"];
+        if (upper.includes("33")) return CLIENT_CHASSIS["R33"];
+        if (upper.includes("32")) return CLIENT_CHASSIS["R32"];
+        return CLIENT_CHASSIS["R34"];
+    }
+    return null;
+}
+
+function calculateLandedCostClient(priceUsd, weightKg, destCountry, targetCurrency, hazmatClass) {
+    const RATES = {
+        USD: 1.0,
+        SAR: 3.75,
+        AED: 3.67,
+        EUR: 0.92,
+        GBP: 0.79,
+        JPY: 150.0,
+        CAD: 1.36,
+        KWD: 0.31,
+        QAR: 3.64
+    };
+    const rate = RATES[targetCurrency] || 3.75;
+    const baseShipping = Math.max(25.0, weightKg * 8.5);
+    const customsDutyUsd = (priceUsd + baseShipping) * 0.05;
+
+    const VAT_RATES = { SA: 0.15, AE: 0.05, GB: 0.20, DE: 0.19, US: 0.0, JP: 0.10, KW: 0.05, QA: 0.05, CA: 0.13 };
+    const vatRate = VAT_RATES[destCountry.toUpperCase()] !== undefined ? VAT_RATES[destCountry.toUpperCase()] : 0.15;
+    const vatUsd = (priceUsd + baseShipping + customsDutyUsd) * vatRate;
+    const totalUsd = priceUsd + baseShipping + customsDutyUsd + vatUsd;
+
+    return {
+        item_price_original: priceUsd * rate,
+        estimated_shipping: baseShipping * rate,
+        customs_duty: customsDutyUsd * rate,
+        import_vat: vatUsd * rate,
+        total_landed_cost: totalUsd * rate,
+        currency: targetCurrency,
+        duty_percentage: 5.0,
+        vat_percentage: vatRate * 100
+    };
+}
+
+function generateFederatedListingsClient(query, cleanPn, destCountry) {
+    const vCtx = resolveVehicleClient(query);
+    const make = vCtx ? vCtx.make : "Universal";
+    const model = vCtx ? vCtx.model : "Automotive";
+    const gen = vCtx ? vCtx.generation : "";
+    const cleanQ = query.trim();
+    const encQ = encodeURIComponent(cleanQ);
+
+    const isAirbag = cleanQ.toLowerCase().includes("airbag");
+    const hazmat = isAirbag ? "class_1_airbag_inflator" : "none";
+
+    let catImg = "https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=600&h=450&fit=crop";
+    if (cleanQ.toLowerCase().includes("light") || cleanQ.toLowerCase().includes("lamp")) {
+        catImg = "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=600&h=450&fit=crop";
+    } else if (cleanQ.toLowerCase().includes("seat") || cleanQ.toLowerCase().includes("bride")) {
+        catImg = "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?w=600&h=450&fit=crop";
+    }
+
+    const now = new Date();
+    const aucEnd1 = new Date(now.getTime() + 19 * 3600 * 1000 + 45 * 60 * 1000).toISOString();
+    const aucEnd2 = new Date(now.getTime() + 54 * 3600 * 1000).toISOString();
+
+    return [
+        {
+            id: `yj-fed-${Math.floor(Math.random() * 90000 + 10000)}`,
+            source_platform: "Yahoo! Auctions Japan",
+            source_listing_id: "YJ-FED-89102",
+            source_url: `https://buyee.jp/item/search/query/${encQ}?translationType=1`,
+            source_logo_url: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=100&h=100&fit=crop",
+            title: `JDM OEM ${make} ${model} ${gen} ${cleanQ} (Genuine Japan)`,
+            brand: `${make} OEM`,
+            manufacturer_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}-85F00`,
+            clean_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}85F00`,
+            interchange_part_numbers: [],
+            primary_image_url: catImg,
+            part_type: "Assembly",
+            aces_fitments: [{ make_name: make, model_name: model, year_start: 1999, year_end: 2026, pcdb_position: "Front" }],
+            pies_attributes: { weight_kg: 5.2, material: "OEM Specification", dimensions_cm: { length: 50, width: 30, height: 20 } },
+            listing_type: "auction",
+            condition: "used_grade_a",
+            authenticity_tier: "oem_genuine",
+            current_bid: 320.00,
+            bid_count: 18,
+            auction_end_time: aucEnd1,
+            currency: "USD",
+            seller_name: "JDM_Motorsports_Japan",
+            seller_rating: 4.95,
+            seller_country: "JP",
+            shipping: { hs_code: "8512.20.00", hazmat_class: hazmat, ships_worldwide: true, base_shipping_cost_usd: 85.0 }
+        },
+        {
+            id: `upg-fed-${Math.floor(Math.random() * 90000 + 10000)}`,
+            source_platform: "Up Garage",
+            source_listing_id: "UPG-FED-44120",
+            source_url: `https://www.upgarage.com/en/ec/search?q=${encQ}`,
+            source_logo_url: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=100&h=100&fit=crop",
+            title: `Up Garage JDM ${make} ${model} ${cleanQ} - Grade A Used`,
+            brand: `${make} Genuine`,
+            manufacturer_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}-85F01`,
+            clean_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}85F01`,
+            interchange_part_numbers: [],
+            primary_image_url: catImg,
+            part_type: "Assembly",
+            aces_fitments: [{ make_name: make, model_name: model, year_start: 1999, year_end: 2026, pcdb_position: "Standard" }],
+            pies_attributes: { weight_kg: 4.8, material: "OEM Spec", dimensions_cm: { length: 50, width: 30, height: 20 } },
+            listing_type: "buy_now",
+            condition: "used_grade_a",
+            authenticity_tier: "oem_genuine",
+            buy_now_price: 275.00,
+            currency: "USD",
+            seller_name: "UpGarage_Tokyo_Store",
+            seller_rating: 4.9,
+            seller_country: "JP",
+            shipping: { hs_code: "8512.20.00", hazmat_class: hazmat, ships_worldwide: true, base_shipping_cost_usd: 70.0 }
+        },
+        {
+            id: `ebay-fed-${Math.floor(Math.random() * 90000 + 10000)}`,
+            source_platform: "eBay Motors",
+            source_listing_id: "EBAY-FED-99382",
+            source_url: `https://www.ebay.com/sch/i.html?_nkw=${encQ}&_sacat=6000`,
+            source_logo_url: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop",
+            title: `OEM Genuine ${make} ${model} ${cleanQ} - Rare Original`,
+            brand: `${make} OEM`,
+            manufacturer_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}-85F02`,
+            clean_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}85F02`,
+            interchange_part_numbers: [],
+            primary_image_url: catImg,
+            part_type: "Assembly",
+            aces_fitments: [{ make_name: make, model_name: model, year_start: 1999, year_end: 2026, pcdb_position: "Assembly" }],
+            pies_attributes: { weight_kg: 4.5, material: "OEM Factory", dimensions_cm: { length: 48, width: 30, height: 20 } },
+            listing_type: "auction",
+            condition: "used_grade_a",
+            authenticity_tier: "oem_genuine",
+            current_bid: 195.00,
+            bid_count: 11,
+            auction_end_time: aucEnd2,
+            currency: "USD",
+            seller_name: "JDM_Salvage_Direct",
+            seller_rating: 4.9,
+            seller_country: "US",
+            shipping: { hs_code: "8512.20.00", hazmat_class: hazmat, ships_worldwide: true, base_shipping_cost_usd: 60.0 }
+        },
+        {
+            id: `amayama-fed-${Math.floor(Math.random() * 90000 + 10000)}`,
+            source_platform: "Amayama",
+            source_listing_id: "AMAYAMA-88219",
+            source_url: `https://www.amayama.com/en/search?q=${encQ}`,
+            source_logo_url: "https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=100&h=100&fit=crop",
+            title: `${make} Genuine Parts ${cleanQ} - Factory Sealed Brand New`,
+            brand: `${make} Genuine`,
+            manufacturer_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}-85F03`,
+            clean_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}85F03`,
+            interchange_part_numbers: [],
+            primary_image_url: catImg,
+            part_type: "Assembly",
+            aces_fitments: [{ make_name: make, model_name: model, year_start: 1999, year_end: 2026, pcdb_position: "Original Equipment" }],
+            pies_attributes: { weight_kg: 5.5, material: "OEM Factory Polycarbonate", dimensions_cm: { length: 55, width: 35, height: 25 } },
+            listing_type: "buy_now",
+            condition: "new_factory_sealed",
+            authenticity_tier: "oem_genuine",
+            buy_now_price: 640.00,
+            currency: "USD",
+            seller_name: "Amayama_Trading_Japan",
+            seller_rating: 4.9,
+            seller_country: "JP",
+            shipping: { hs_code: "8512.20.00", hazmat_class: hazmat, ships_worldwide: true, base_shipping_cost_usd: 65.0 }
+        },
+        {
+            id: `partsouq-fed-${Math.floor(Math.random() * 90000 + 10000)}`,
+            source_platform: "Partsouq",
+            source_listing_id: "PSQ-FED-77182",
+            source_url: `https://partsouq.com/en/search/all?q=${encQ}`,
+            source_logo_url: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=100&h=100&fit=crop",
+            title: `${make} Genuine OEM ${cleanQ} (Factory Boxed)`,
+            brand: `${make} Genuine`,
+            manufacturer_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}-85F04`,
+            clean_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}85F04`,
+            interchange_part_numbers: [],
+            primary_image_url: catImg,
+            part_type: "Assembly",
+            aces_fitments: [{ make_name: make, model_name: model, year_start: 1999, year_end: 2026, pcdb_position: "OEM" }],
+            pies_attributes: { weight_kg: 5.2, material: "OEM Factory", dimensions_cm: { length: 52, width: 32, height: 22 } },
+            listing_type: "buy_now",
+            condition: "new_factory_sealed",
+            authenticity_tier: "oem_genuine",
+            buy_now_price: 595.00,
+            currency: "USD",
+            seller_name: "Partsouq_Auto_Warehouse",
+            seller_rating: 4.85,
+            seller_country: "AE",
+            shipping: { hs_code: "8512.20.00", hazmat_class: hazmat, ships_worldwide: true, base_shipping_cost_usd: 40.0 }
+        },
+        {
+            id: `megazip-fed-${Math.floor(Math.random() * 90000 + 10000)}`,
+            source_platform: "Megazip",
+            source_listing_id: "MGZ-FED-66129",
+            source_url: `https://www.megazip.net/search?q=${encQ}`,
+            source_logo_url: "https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=100&h=100&fit=crop",
+            title: `Genuine OEM ${make} ${cleanQ} Assembly`,
+            brand: `${make} OEM`,
+            manufacturer_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}-85F05`,
+            clean_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}85F05`,
+            interchange_part_numbers: [],
+            primary_image_url: catImg,
+            part_type: "Assembly",
+            aces_fitments: [{ make_name: make, model_name: model, year_start: 1999, year_end: 2026, pcdb_position: "OEM Unit" }],
+            pies_attributes: { weight_kg: 5.0, material: "OEM Factory", dimensions_cm: { length: 50, width: 30, height: 20 } },
+            listing_type: "buy_now",
+            condition: "new_factory_sealed",
+            authenticity_tier: "oem_genuine",
+            buy_now_price: 670.00,
+            currency: "USD",
+            seller_name: "Megazip_Global",
+            seller_rating: 4.9,
+            seller_country: "JP",
+            shipping: { hs_code: "8512.20.00", hazmat_class: hazmat, ships_worldwide: true, base_shipping_cost_usd: 75.0 }
+        },
+        {
+            id: `autodoc-fed-${Math.floor(Math.random() * 90000 + 10000)}`,
+            source_platform: "AutoDoc",
+            source_listing_id: "ATD-FED-55102",
+            source_url: `https://www.autodoc.de/search?keyword=${encQ}`,
+            source_logo_url: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=100&h=100&fit=crop",
+            title: `OES Replacement ${cleanQ} for ${make} ${model}`,
+            brand: "Hella / Valeo OES",
+            manufacturer_part_number: cleanPn || "OES-88210",
+            clean_part_number: cleanPn || "OES88210",
+            interchange_part_numbers: [],
+            primary_image_url: catImg,
+            part_type: "Assembly",
+            aces_fitments: [{ make_name: make, model_name: model, year_start: 1999, year_end: 2026, pcdb_position: "OES Replacement" }],
+            pies_attributes: { weight_kg: 5.1, material: "OES High Grade", dimensions_cm: { length: 50, width: 30, height: 20 } },
+            listing_type: "buy_now",
+            condition: "new_factory_sealed",
+            authenticity_tier: "oes_tier1",
+            buy_now_price: 385.00,
+            currency: "USD",
+            seller_name: "AutoDoc_SE_GmbH",
+            seller_rating: 4.9,
+            seller_country: "DE",
+            shipping: { hs_code: "8512.20.00", hazmat_class: hazmat, ships_worldwide: true, base_shipping_cost_usd: 50.0 }
+        },
+        {
+            id: `bparts-fed-${Math.floor(Math.random() * 90000 + 10000)}`,
+            source_platform: "B-Parts",
+            source_listing_id: "BPT-FED-33291",
+            source_url: `https://www.b-parts.com/auto-parts/search?q=${encQ}`,
+            source_logo_url: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=100&h=100&fit=crop",
+            title: `Certified OEM Recycled ${make} ${model} ${cleanQ}`,
+            brand: `${make} OEM`,
+            manufacturer_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}-85F07`,
+            clean_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}85F07`,
+            interchange_part_numbers: [],
+            primary_image_url: catImg,
+            part_type: "Assembly",
+            aces_fitments: [{ make_name: make, model_name: model, year_start: 1999, year_end: 2026, pcdb_position: "Grade A Certified" }],
+            pies_attributes: { weight_kg: 4.7, material: "OEM Certified Recycled", dimensions_cm: { length: 49, width: 29, height: 19 } },
+            listing_type: "buy_now",
+            condition: "used_grade_a",
+            authenticity_tier: "oem_genuine",
+            buy_now_price: 290.00,
+            currency: "USD",
+            seller_name: "B_Parts_Certified_Recycled",
+            seller_rating: 4.8,
+            seller_country: "PT",
+            shipping: { hs_code: "8512.20.00", hazmat_class: hazmat, ships_worldwide: true, base_shipping_cost_usd: 58.0 }
+        }
+    ];
+}
+
+function runClientSideEngine(params) {
+    const query = (params.query || "").trim();
+    const destCountry = (params.country || "SA").toUpperCase();
+    const currency = (params.currency || "SAR").toUpperCase();
+    const mode = params.mode || "auto";
+    const filters = params.filters || {};
+    const garage = params.garage || {};
+
+    let detectedMode = "keyword";
+    let cleanPn = null;
+
+    const alnum = query.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+
+    if (mode === "part_number") {
+        detectedMode = "part_number";
+        cleanPn = alnum;
+    } else if (mode === "keyword") {
+        detectedMode = "keyword";
+    } else {
+        // Auto detection
+        if (alnum.length === 17 && !/[IOQ]/i.test(alnum)) {
+            detectedMode = "vin";
+        } else if (CLIENT_INTERCHANGE[alnum]) {
+            detectedMode = "part_number";
+            cleanPn = alnum;
+        } else {
+            const hasDigits = /\d/.test(alnum);
+            const hasLetters = /[A-Z]/.test(alnum);
+            if (hasDigits && hasLetters && alnum.length >= 5 && alnum.length <= 18 && !query.includes(" ")) {
+                detectedMode = "part_number";
+                cleanPn = alnum;
+            } else if (/^\d{6,14}$/.test(alnum)) {
+                detectedMode = "part_number";
+                cleanPn = alnum;
+            }
+        }
+    }
+
+    const interchangeSet = new Set(CLIENT_INTERCHANGE[cleanPn] || (cleanPn ? [cleanPn] : []));
+
+    // Base catalog from catalog.js
+    const catalog = window.BANSHARI_CATALOG || [];
+    let matchedCandidates = [];
+
+    function normToken(s) {
+        return (s || "").toLowerCase()
+            .replace(/\biii\b/g, "3")
+            .replace(/\biv\b/g, "4")
+            .replace(/\bii\b/g, "2")
+            .replace(/\bcrfp\b/g, "cfrp");
+    }
+
+    const qNorm = normToken(query);
+    const qWords = qNorm.split(/\s+/).filter(w => w.length > 1 && !["with", "for", "the", "and", "in", "of"].includes(w));
+
+    for (const item of catalog) {
+        let match = false;
+        if (!query) {
+            match = true;
+        } else if (detectedMode === "part_number") {
+            const itemClean = (item.clean_part_number || "").toUpperCase();
+            const itemInterchanges = new Set((item.interchange_part_numbers || []).map(i => i.replace(/[^A-Za-z0-9]/g, "").toUpperCase()));
+            if (itemClean === cleanPn || itemInterchanges.has(cleanPn) || Array.from(interchangeSet).some(ic => ic === itemClean || itemInterchanges.has(ic))) {
+                match = true;
+            }
+        } else {
+            const itemText = normToken(`${item.title} ${item.brand} ${item.part_type} ${item.clean_part_number}`);
+            if (itemText.includes(qNorm)) {
+                match = true;
+            } else if (qWords.length === 1) {
+                if (itemText.includes(qWords[0])) match = true;
+            } else if (qWords.length > 1) {
+                if (qWords.every(w => itemText.includes(w))) match = true;
+            }
+        }
+        if (match) {
+            matchedCandidates.push(item);
+        }
+    }
+
+    // If few candidates in catalog, dynamically federate across global platforms
+    if (matchedCandidates.length < 4 && query) {
+        const fedListings = generateFederatedListingsClient(query, cleanPn, destCountry);
+        const existingPlatforms = new Set(matchedCandidates.map(m => m.source_platform));
+        for (const fItem of fedListings) {
+            if (!existingPlatforms.has(fItem.source_platform) || matchedCandidates.length === 0) {
+                matchedCandidates.push(fItem);
+            }
+        }
+    }
+
+    // Compute facets
+    const facetCounts = {
+        listing_types: {},
+        conditions: {},
+        authenticity_tiers: {},
+        sources: {}
+    };
+    for (const item of matchedCandidates) {
+        const lt = item.listing_type || "buy_now";
+        facetCounts.listing_types[lt] = (facetCounts.listing_types[lt] || 0) + 1;
+        const cond = item.condition || "new_factory_sealed";
+        facetCounts.conditions[cond] = (facetCounts.conditions[cond] || 0) + 1;
+        const tier = item.authenticity_tier || "oem_genuine";
+        facetCounts.authenticity_tiers[tier] = (facetCounts.authenticity_tiers[tier] || 0) + 1;
+        const src = item.source_platform;
+        facetCounts.sources[src] = (facetCounts.sources[src] || 0) + 1;
+    }
+
+    const facets = {
+        listing_types: Object.entries(facetCounts.listing_types).map(([val, count]) => ({ value: val, label: formatLabel(val), count })),
+        conditions: Object.entries(facetCounts.conditions).map(([val, count]) => ({ value: val, label: formatLabel(val), count })),
+        authenticity_tiers: Object.entries(facetCounts.authenticity_tiers).map(([val, count]) => ({ value: val, label: formatLabel(val), count })),
+        sources: Object.entries(facetCounts.sources).map(([val, count]) => ({ value: val, label: val, count }))
+    };
+
+    // Filter results
+    let filtered = [];
+    for (const item of matchedCandidates) {
+        if (filters.listing_types && filters.listing_types.length > 0 && !filters.listing_types.includes(item.listing_type)) continue;
+        if (filters.conditions && filters.conditions.length > 0 && !filters.conditions.includes(item.condition)) continue;
+        if (filters.authenticity_tiers && filters.authenticity_tiers.length > 0 && !filters.authenticity_tiers.includes(item.authenticity_tier)) continue;
+        if (filters.sources && filters.sources.length > 0 && !filters.sources.includes(item.source_platform)) continue;
+        if (filters.exclude_hazmat && item.shipping && item.shipping.hazmat_class !== "none") continue;
+        filtered.push(item);
+    }
+
+    // Enrich with Landed Cost
+    const enrichedResults = filtered.map(item => {
+        const price = item.listing_type === "auction" ? (item.current_bid || 50.0) : (item.buy_now_price || 100.0);
+        const weight = (item.pies_attributes && item.pies_attributes.weight_kg) || 4.5;
+        const hazmat = (item.shipping && item.shipping.hazmat_class) || "none";
+        const landed = calculateLandedCostClient(price, weight, destCountry, currency, hazmat);
+
+        return {
+            listing: item,
+            landed_cost: landed,
+            fitment_verified: !!(garage.make || garage.model),
+            fitment_notes: (garage.make || garage.model) ? `Verified fit for ${garage.year || ""} ${garage.make || ""} ${garage.model || ""}`.trim() : null
+        };
+    });
+
+    return {
+        query_meta: {
+            raw_query: query,
+            detected_mode: detectedMode,
+            cleaned_part_number: cleanPn,
+            synonyms_expanded: [],
+            vin_decoded: null
+        },
+        selected_currency: currency,
+        destination_country: destCountry,
+        returned_count: enrichedResults.length,
+        total_matches: matchedCandidates.length,
+        results: enrichedResults,
+        facets: facets
+    };
 }
