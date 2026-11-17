@@ -21,7 +21,7 @@ def health():
     return {
         "status": "healthy",
         "app": "Banshari Global Automotive Metasearch",
-        "version": "1.0.0",
+        "version": "1.0.1",
         "standards": ["ACES 5.0", "PIES 8.0", "TecDoc", "ISO 3779", "HS 8708"]
     }
 
