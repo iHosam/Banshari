@@ -117,45 +117,40 @@ Each normalized part listing across all sources conforms to the following schema
 
 ---
 
-## 3. Raspberry Pi 5 & Docker Deployment Guide
+## 3. Docker & Self-Hosting Deployment Guide
 
-The pi5 is online at `100.120.104.61` on your Tailscale network.
+Banshari includes a multi-arch container image (`ARM64` and `x86_64`) ready to run on any Linux server, home server, or cloud host.
 
-### Step 1: Copy SSH Key to Pi 5 (One-time setup if required)
-On your Windows machine:
-```powershell
-# Copy your public key to the Pi 5
-type $HOME\.ssh\id_ed25519.pub | ssh <username>@100.120.104.61 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/iHosam/Banshari.git
+cd Banshari
 ```
 
-### Step 2: Transfer Banshari to Pi 5
+### Step 2: Run with Docker Compose
 ```bash
-# Using scp or rsync over Tailscale
-scp -r c:\Users\halha\Downloads\Banshari <username>@100.120.104.61:~/Banshari
-```
-
-### Step 3: Run with Docker Compose on the Pi 5
-```bash
-ssh <username>@100.120.104.61
-cd ~/Banshari
 docker compose up -d --build
 ```
 
-### Step 4: Access Banshari on Any Tailscale Device
+### Step 3: Access the Application
 Open your browser and navigate to:
 ```
-http://100.120.104.61:8000
-# or via MagicDNS:
-http://pi5:8000
+http://<your-server-ip>:8000
+```
+or locally:
+```
+http://localhost:8000
 ```
 
 ---
 
 ## 4. Local Execution & Testing
 
-To run directly on Windows or macOS:
-```powershell
-cd c:\Users\halha\Downloads\Banshari
+To run directly with Python:
+```bash
+git clone https://github.com/iHosam/Banshari.git
+cd Banshari
+pip install -r requirements.txt
 python run.py
 ```
 Open [http://localhost:8000](http://localhost:8000) to view the live dashboard.
