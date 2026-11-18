@@ -83,7 +83,7 @@ MOCK_CATALOG: List[UnifiedPartListing] = [
         manufacturer_part_number="09.C399.13",
         clean_part_number="09C39913",
         interchange_part_numbers=["34116792223", "150348320", "55523"],
-        primary_image_url="https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=600&h=450&fit=crop",
+        primary_image_url="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=600&h=450&fit=crop",
         part_type="Brake Rotor",
         aces_fitments=[
             ACESFitment(
@@ -913,7 +913,7 @@ MOCK_CATALOG: List[UnifiedPartListing] = [
         manufacturer_part_number="31100-R40-A01",
         clean_part_number="31100R40A01",
         interchange_part_numbers=["1042105910", "AL1298X", "2100656"],
-        primary_image_url="https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=600&h=450&fit=crop",
+        primary_image_url="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=600&h=450&fit=crop",
         part_type="Alternator",
         aces_fitments=[
             ACESFitment(
@@ -1020,7 +1020,7 @@ MOCK_CATALOG: List[UnifiedPartListing] = [
         manufacturer_part_number="09.C399.13",
         clean_part_number="09C39913",
         interchange_part_numbers=["34116792223", "150348320", "55523"],
-        primary_image_url="https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=600&h=450&fit=crop",
+        primary_image_url="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=600&h=450&fit=crop",
         part_type="Brake Rotor",
         aces_fitments=[
             ACESFitment(
@@ -1553,7 +1553,7 @@ MOCK_CATALOG: List[UnifiedPartListing] = [
         manufacturer_part_number="22448-91F00",
         clean_part_number="2244891F00",
         interchange_part_numbers=["22448-91F00", "2244891F00", "DIS-005"],
-        primary_image_url="https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=600&h=450&fit=crop",
+        primary_image_url="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=600&h=450&fit=crop",
         part_type="Ignition Coil",
         aces_fitments=[
             ACESFitment(

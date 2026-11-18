@@ -99,7 +99,7 @@ window.BANSHARI_CATALOG = [
       "150348320",
       "55523"
     ],
-    "primary_image_url": "https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=600&h=450&fit=crop",
+    "primary_image_url": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=600&h=450&fit=crop",
     "additional_image_urls": [],
     "part_type": "Brake Rotor",
     "aces_fitments": [
@@ -1345,7 +1345,7 @@ window.BANSHARI_CATALOG = [
       "AL1298X",
       "2100656"
     ],
-    "primary_image_url": "https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=600&h=450&fit=crop",
+    "primary_image_url": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=600&h=450&fit=crop",
     "additional_image_urls": [],
     "part_type": "Alternator",
     "aces_fitments": [
@@ -1512,7 +1512,7 @@ window.BANSHARI_CATALOG = [
       "150348320",
       "55523"
     ],
-    "primary_image_url": "https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=600&h=450&fit=crop",
+    "primary_image_url": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=600&h=450&fit=crop",
     "additional_image_urls": [],
     "part_type": "Brake Rotor",
     "aces_fitments": [
@@ -2320,7 +2320,7 @@ window.BANSHARI_CATALOG = [
       "2244891F00",
       "DIS-005"
     ],
-    "primary_image_url": "https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=600&h=450&fit=crop",
+    "primary_image_url": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=600&h=450&fit=crop",
     "additional_image_urls": [],
     "part_type": "Ignition Coil",
     "aces_fitments": [

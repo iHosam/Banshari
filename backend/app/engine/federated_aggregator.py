@@ -27,16 +27,16 @@ class FederatedAggregator:
         "Yahoo! Auctions Japan": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=100&h=100&fit=crop",
         "Up Garage": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=100&h=100&fit=crop",
         "eBay Motors": "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop",
-        "Amayama": "https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=100&h=100&fit=crop",
+        "Amayama": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=100&h=100&fit=crop",
         "Partsouq": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=100&h=100&fit=crop",
         "RockAuto": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=100&h=100&fit=crop",
         "AutoDoc": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=100&h=100&fit=crop",
-        "Megazip": "https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=100&h=100&fit=crop",
+        "Megazip": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=100&h=100&fit=crop",
         "Allegro": "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop",
         "B-Parts": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=100&h=100&fit=crop",
         "Car-Part.com": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=100&h=100&fit=crop",
         "FCP Euro": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=100&h=100&fit=crop",
-        "ECS Tuning": "https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=100&h=100&fit=crop",
+        "ECS Tuning": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=100&h=100&fit=crop",
         "Summit Racing": "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop",
         "AliExpress": "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop"
     }
@@ -44,15 +44,15 @@ class FederatedAggregator:
     CATEGORY_IMAGES = {
         "lighting": "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=600&h=450&fit=crop",
         "seat": "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?w=600&h=450&fit=crop",
-        "brake": "https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=600&h=450&fit=crop",
+        "brake": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=600&h=450&fit=crop",
         "exhaust": "https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?w=600&h=450&fit=crop",
         "turbo": "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=600&h=450&fit=crop",
-        "engine": "https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=600&h=450&fit=crop",
+        "engine": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=600&h=450&fit=crop",
         "suspension": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&h=450&fit=crop",
         "bumper": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&h=450&fit=crop",
         "wheel": "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=600&h=450&fit=crop",
         "airbag": "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=600&h=450&fit=crop",
-        "default": "https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=600&h=450&fit=crop"
+        "default": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=600&h=450&fit=crop"
     }
 
     @classmethod

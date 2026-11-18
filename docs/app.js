@@ -821,7 +821,7 @@ function generateFederatedListingsClient(query, cleanPn, destCountry) {
     const isAirbag = cleanQ.toLowerCase().includes("airbag");
     const hazmat = isAirbag ? "class_1_airbag_inflator" : "none";
 
-    let catImg = "https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=600&h=450&fit=crop";
+    let catImg = "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=600&h=450&fit=crop";
     if (cleanQ.toLowerCase().includes("light") || cleanQ.toLowerCase().includes("lamp")) {
         catImg = "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=600&h=450&fit=crop";
     } else if (cleanQ.toLowerCase().includes("seat") || cleanQ.toLowerCase().includes("bride")) {
@@ -917,7 +917,7 @@ function generateFederatedListingsClient(query, cleanPn, destCountry) {
             source_platform: "Amayama",
             source_listing_id: `AMAYAMA-${Math.floor(Math.random() * 899999 + 100000)}`,
             source_url: `https://www.amayama.com/en/search?q=${encPnOrTarget}`,
-            source_logo_url: "https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=100&h=100&fit=crop",
+            source_logo_url: "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=100&h=100&fit=crop",
             title: `${make} Genuine Parts ${partDescTitle} - Factory Sealed Brand New`,
             brand: `${make} Genuine`,
             manufacturer_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}-85F03`,
@@ -967,7 +967,7 @@ function generateFederatedListingsClient(query, cleanPn, destCountry) {
             source_platform: "Megazip",
             source_listing_id: `MGZ-FED-${Math.floor(Math.random() * 899999 + 100000)}`,
             source_url: `https://www.megazip.net/search?q=${encPnOrTarget}`,
-            source_logo_url: "https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=100&h=100&fit=crop",
+            source_logo_url: "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=100&h=100&fit=crop",
             title: `Genuine OEM ${make} ${partDescTitle} Assembly`,
             brand: `${make} OEM`,
             manufacturer_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}-85F05`,
