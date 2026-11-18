@@ -137,5 +137,18 @@ class TestBanshariEngine(unittest.TestCase):
         self.assertEqual(s15_listing.aces_fitments[0].make_name, "Nissan")
         self.assertEqual(s15_listing.aces_fitments[0].model_name, "Silvia")
 
+    def test_siliva_typo_and_aliexpress(self):
+        # 'siliva' typo should resolve to Silvia and return multiple AliExpress results
+        res = self.engine.search(query="siliva")
+        self.assertGreaterEqual(res.total_matches, 4)
+        ali_results = [r for r in res.results if r.listing.source_platform == "AliExpress"]
+        self.assertGreaterEqual(len(ali_results), 3)
+
+        # Verify deep link contains descriptive product search, NOT dummy internal SKU
+        for r in ali_results:
+            self.assertTrue(r.listing.source_url.startswith("https://www.aliexpress.com/wholesale?SearchText="))
+            self.assertNotIn("ALI-S15-TL01", r.listing.source_url)
+            self.assertNotIn("ALIS15TL01", r.listing.source_url)
+
 if __name__ == "__main__":
     unittest.main()

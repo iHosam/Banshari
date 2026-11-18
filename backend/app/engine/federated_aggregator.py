@@ -88,6 +88,12 @@ class FederatedAggregator:
         if not clean_q:
             return []
 
+        import re
+        clean_q = re.sub(r'\bsiliva\b', 'silvia', clean_q, flags=re.IGNORECASE)
+        clean_q = re.sub(r'\bslivia\b', 'silvia', clean_q, flags=re.IGNORECASE)
+        clean_q = re.sub(r'\bsilva\b', 'silvia', clean_q, flags=re.IGNORECASE)
+        clean_q = re.sub(r'\bsklyine\b', 'skyline', clean_q, flags=re.IGNORECASE)
+
         # 1. Resolve vehicle context
         v_ctx = QueryParser.resolve_vehicle_context(clean_q)
         make = v_ctx["make"] if v_ctx else "Universal"
@@ -664,14 +670,22 @@ class FederatedAggregator:
             )
         )
 
-        # Platform 11: AliExpress (Direct Global Factory Replacement)
+        # Platform 11: AliExpress (Listing 1: Direct Global Factory Replacement)
         ali_title = f"Factory Direct {clean_q.title()} for {make} {model} (OEM Spec Fit)"
-        ali_url = f"https://www.aliexpress.com/wholesale?SearchText={urllib.parse.quote(search_kw)}"
+        ali_url = DeepLinker.get_live_url(
+            platform="AliExpress",
+            mpn=clean_pn or f"{make[:3].upper()}-AL991",
+            clean_pn=clean_pn or f"{make[:3].upper()}AL991",
+            title=ali_title,
+            make=make,
+            brand="AliExpress Direct",
+            user_query=search_kw
+        )
         listings.append(
             UnifiedPartListing(
-                id=f"ali-fed-{abs(hash(clean_q)) % 100000}",
+                id=f"ali-fed-1-{abs(hash(clean_q)) % 100000}",
                 source_platform="AliExpress",
-                source_listing_id=f"ALI-FED-{abs(hash(clean_q)) % 999999}",
+                source_listing_id=f"ALI-FED-{abs(hash(clean_q)) % 899999 + 100000}",
                 source_url=ali_url,
                 source_logo_url=cls.PLATFORM_LOGOS["AliExpress"],
                 title=ali_title,
@@ -714,6 +728,130 @@ class FederatedAggregator:
                     ships_to=["*"],
                     ships_worldwide=True,
                     base_shipping_cost_usd=25.00
+                )
+            )
+        )
+
+        # Platform 11: AliExpress (Listing 2: Performance / Tuning Upgrade)
+        ali_perf_title = f"Upgraded Performance {clean_q.title()} for {make} {model} (High Durability)"
+        ali_perf_url = DeepLinker.get_live_url(
+            platform="AliExpress",
+            mpn=clean_pn or f"{make[:3].upper()}-AL992",
+            clean_pn=clean_pn or f"{make[:3].upper()}AL992",
+            title=ali_perf_title,
+            make=make,
+            brand="AliExpress Direct",
+            user_query=search_kw
+        )
+        listings.append(
+            UnifiedPartListing(
+                id=f"ali-fed-2-{abs(hash(clean_q)) % 100000}",
+                source_platform="AliExpress",
+                source_listing_id=f"ALI-FED-{abs(hash(clean_q)) % 899999 + 200000}",
+                source_url=ali_perf_url,
+                source_logo_url=cls.PLATFORM_LOGOS["AliExpress"],
+                title=ali_perf_title,
+                brand="AliExpress Direct",
+                manufacturer_part_number=clean_pn or f"{make[:3].upper()}-AL992",
+                clean_part_number=clean_pn or f"{make[:3].upper()}AL992",
+                interchange_part_numbers=[],
+                primary_image_url=img_url,
+                part_type=cat.title(),
+                aces_fitments=[
+                    ACESFitment(
+                        base_vehicle_id=pcdb_id,
+                        make_name=make,
+                        model_name=model,
+                        year_start=year_start,
+                        year_end=year_end,
+                        pcdb_part_terminology_id=9000,
+                        pcdb_position="Tuning / Upgrade"
+                    )
+                ],
+                tecdoc_fitments=[],
+                pies_attributes=PIESAttributes(
+                    weight_kg=3.2,
+                    dimensions_cm={"length": 35.0, "width": 25.0, "height": 15.0},
+                    material="Reinforced Composite / Aluminum",
+                    warranty_months=12
+                ),
+                listing_type=ListingType.BUY_NOW,
+                condition=ItemCondition.NEW_SEALED,
+                authenticity_tier=AuthenticityTier.AFTERMARKET_VALUE,
+                buy_now_price=89.00,
+                currency="USD",
+                seller_name="SpeedMaster_Motorsport_Direct",
+                seller_rating=4.82,
+                seller_country="CN",
+                shipping=ShippingCompliance(
+                    hs_code="8512.20.00" if cat == "lighting" else "8708.29.90",
+                    hazmat_class=hazmat,
+                    air_freight_restricted=air_restricted,
+                    ships_to=["*"],
+                    ships_worldwide=True,
+                    base_shipping_cost_usd=18.00
+                )
+            )
+        )
+
+        # Platform 11: AliExpress (Listing 3: Styling / Carbon Accessories / Direct Fit)
+        ali_acc_title = f"High Precision Direct Fit {clean_q.title()} Module for {make} {model}"
+        ali_acc_url = DeepLinker.get_live_url(
+            platform="AliExpress",
+            mpn=clean_pn or f"{make[:3].upper()}-AL993",
+            clean_pn=clean_pn or f"{make[:3].upper()}AL993",
+            title=ali_acc_title,
+            make=make,
+            brand="AliExpress Direct",
+            user_query=search_kw
+        )
+        listings.append(
+            UnifiedPartListing(
+                id=f"ali-fed-3-{abs(hash(clean_q)) % 100000}",
+                source_platform="AliExpress",
+                source_listing_id=f"ALI-FED-{abs(hash(clean_q)) % 899999 + 300000}",
+                source_url=ali_acc_url,
+                source_logo_url=cls.PLATFORM_LOGOS["AliExpress"],
+                title=ali_acc_title,
+                brand="AliExpress Direct",
+                manufacturer_part_number=clean_pn or f"{make[:3].upper()}-AL993",
+                clean_part_number=clean_pn or f"{make[:3].upper()}AL993",
+                interchange_part_numbers=[],
+                primary_image_url=img_url,
+                part_type=cat.title(),
+                aces_fitments=[
+                    ACESFitment(
+                        base_vehicle_id=pcdb_id,
+                        make_name=make,
+                        model_name=model,
+                        year_start=year_start,
+                        year_end=year_end,
+                        pcdb_part_terminology_id=9000,
+                        pcdb_position="Assembly"
+                    )
+                ],
+                tecdoc_fitments=[],
+                pies_attributes=PIESAttributes(
+                    weight_kg=2.0,
+                    dimensions_cm={"length": 30.0, "width": 20.0, "height": 10.0},
+                    material="OEM Spec Polycarbonate",
+                    warranty_months=6
+                ),
+                listing_type=ListingType.BUY_NOW,
+                condition=ItemCondition.NEW_SEALED,
+                authenticity_tier=AuthenticityTier.AFTERMARKET_VALUE,
+                buy_now_price=45.00,
+                currency="USD",
+                seller_name="GlobalAuto_Sensors_Direct",
+                seller_rating=4.78,
+                seller_country="CN",
+                shipping=ShippingCompliance(
+                    hs_code="8512.20.00" if cat == "lighting" else "8708.29.90",
+                    hazmat_class=hazmat,
+                    air_freight_restricted=air_restricted,
+                    ships_to=["*"],
+                    ships_worldwide=True,
+                    base_shipping_cost_usd=12.00
                 )
             )
         )

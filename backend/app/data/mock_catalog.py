@@ -1590,6 +1590,106 @@ MOCK_CATALOG: List[UnifiedPartListing] = [
             ships_worldwide=True,
             base_shipping_cost_usd=16.00
         )
+    ),
+    # 30. AliExpress - Nissan Silvia S15 Spec-R Full LED Projector Headlights (Pair)
+    UnifiedPartListing(
+        id="ali-s15-led-headlight",
+        source_platform="AliExpress",
+        source_listing_id="ALI-7721903",
+        source_url="https://www.aliexpress.com/wholesale?SearchText=Nissan+Silvia+S15+LED+Headlights",
+        source_logo_url="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop",
+        title="Nissan Silvia S15 Spec-R Full LED Projector Headlights Assembly (Pair)",
+        brand="AliExpress Direct",
+        manufacturer_part_number="ALI-S15-HL02",
+        clean_part_number="ALIS15HL02",
+        interchange_part_numbers=["26010-85F00", "26060-85F00"],
+        primary_image_url="https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=600&h=450&fit=crop",
+        part_type="Lighting",
+        aces_fitments=[
+            ACESFitment(
+                base_vehicle_id=118920,
+                make_name="Nissan",
+                model_name="Silvia",
+                year_start=1999,
+                year_end=2002,
+                submodel_name="Spec-R / Spec-S",
+                pcdb_part_terminology_id=9000,
+                pcdb_position="Front Headlamp Pair"
+            )
+        ],
+        tecdoc_fitments=[],
+        pies_attributes=PIESAttributes(
+            weight_kg=5.8,
+            dimensions_cm={"length": 55.0, "width": 35.0, "height": 25.0},
+            material="UV Polycarbonate / Bi-LED Projectors",
+            country_of_origin="CN",
+            warranty_months=12
+        ),
+        listing_type=ListingType.BUY_NOW,
+        condition=ItemCondition.NEW_SEALED,
+        authenticity_tier=AuthenticityTier.AFTERMARKET_VALUE,
+        currency="USD",
+        buy_now_price=245.00,
+        seller_name="Guangzhou_Auto_Lighting_Direct",
+        seller_rating=4.85,
+        seller_country="CN",
+        shipping=ShippingCompliance(
+            hs_code="8512.20.00",
+            hazmat_class=HazmatClass.NONE,
+            ships_to=["*"],
+            ships_worldwide=True,
+            base_shipping_cost_usd=32.00
+        )
+    ),
+    # 31. AliExpress - Nissan Silvia S15 Front Bumper Lip Spoiler (Carbon Fiber Style)
+    UnifiedPartListing(
+        id="ali-s15-carbon-lip",
+        source_platform="AliExpress",
+        source_listing_id="ALI-5510291",
+        source_url="https://www.aliexpress.com/wholesale?SearchText=Nissan+Silvia+S15+Front+Lip+Spoiler",
+        source_logo_url="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop",
+        title="Nissan Silvia S15 Front Bumper Lip Spoiler (Carbon Fiber Style Polyurethane)",
+        brand="AliExpress Direct",
+        manufacturer_part_number="ALI-S15-LIP03",
+        clean_part_number="ALIS15LIP03",
+        interchange_part_numbers=[],
+        primary_image_url="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&h=450&fit=crop",
+        part_type="Body Styling",
+        aces_fitments=[
+            ACESFitment(
+                base_vehicle_id=118920,
+                make_name="Nissan",
+                model_name="Silvia",
+                year_start=1999,
+                year_end=2002,
+                submodel_name="Spec-R / Spec-S",
+                pcdb_part_terminology_id=9100,
+                pcdb_position="Front Lower Bumper"
+            )
+        ],
+        tecdoc_fitments=[],
+        pies_attributes=PIESAttributes(
+            weight_kg=3.5,
+            dimensions_cm={"length": 160.0, "width": 45.0, "height": 15.0},
+            material="Flexible Polyurethane / Hydro-dip Carbon",
+            country_of_origin="CN",
+            warranty_months=12
+        ),
+        listing_type=ListingType.BUY_NOW,
+        condition=ItemCondition.NEW_SEALED,
+        authenticity_tier=AuthenticityTier.AFTERMARKET_VALUE,
+        currency="USD",
+        buy_now_price=115.00,
+        seller_name="AeroDynamics_Factory_Direct",
+        seller_rating=4.76,
+        seller_country="CN",
+        shipping=ShippingCompliance(
+            hs_code="8708.29.90",
+            hazmat_class=HazmatClass.NONE,
+            ships_to=["*"],
+            ships_worldwide=True,
+            base_shipping_cost_usd=38.00
+        )
     )
 ]
 

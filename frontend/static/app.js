@@ -704,7 +704,13 @@ const CLIENT_CHASSIS = {
 };
 
 function resolveVehicleClient(q) {
-    const upper = q.toUpperCase();
+    const upper = q.toUpperCase()
+        .replace(/\bSILIVA\b/g, "SILVIA")
+        .replace(/\bSLIVIA\b/g, "SILVIA")
+        .replace(/\bSILVA\b/g, "SILVIA")
+        .replace(/\bSKLYINE\b/g, "SKYLINE")
+        .replace(/\bMAITA\b/g, "MIATA")
+        .replace(/\bCIVIV\b/g, "CIVIC");
     const tokens = upper.split(/[\s\-_]+/);
     for (const t of tokens) {
         if (CLIENT_CHASSIS[t]) return CLIENT_CHASSIS[t];
@@ -1002,7 +1008,7 @@ function generateFederatedListingsClient(query, cleanPn, destCountry) {
             shipping: { hs_code: "8512.20.00", hazmat_class: hazmat, ships_worldwide: true, base_shipping_cost_usd: 58.0 }
         },
         {
-            id: `ali-fed-${Math.floor(Math.random() * 90000 + 10000)}`,
+            id: `ali-fed-1-${Math.floor(Math.random() * 90000 + 10000)}`,
             source_platform: "AliExpress",
             source_listing_id: "ALI-FED-99214",
             source_url: `https://www.aliexpress.com/wholesale?SearchText=${encQ}`,
@@ -1025,6 +1031,56 @@ function generateFederatedListingsClient(query, cleanPn, destCountry) {
             seller_rating: 4.75,
             seller_country: "CN",
             shipping: { hs_code: "8512.20.00", hazmat_class: hazmat, ships_worldwide: true, base_shipping_cost_usd: 25.0 }
+        },
+        {
+            id: `ali-fed-2-${Math.floor(Math.random() * 90000 + 10000)}`,
+            source_platform: "AliExpress",
+            source_listing_id: "ALI-FED-88124",
+            source_url: `https://www.aliexpress.com/wholesale?SearchText=${encQ}`,
+            source_logo_url: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop",
+            title: `Upgraded Performance ${cleanQ} for ${make} ${model} (High Durability)`,
+            brand: "AliExpress Direct",
+            manufacturer_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}-AL992`,
+            clean_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}AL992`,
+            interchange_part_numbers: [],
+            primary_image_url: catImg,
+            part_type: "Tuning Part",
+            aces_fitments: [{ make_name: make, model_name: model, year_start: 1999, year_end: 2026, pcdb_position: "Tuning / Upgrade" }],
+            pies_attributes: { weight_kg: 3.2, material: "Reinforced Composite / Aluminum", dimensions_cm: { length: 35, width: 25, height: 15 } },
+            listing_type: "buy_now",
+            condition: "new_factory_sealed",
+            authenticity_tier: "aftermarket_economy",
+            buy_now_price: 89.00,
+            currency: "USD",
+            seller_name: "SpeedMaster_Motorsport_Direct",
+            seller_rating: 4.82,
+            seller_country: "CN",
+            shipping: { hs_code: "8512.20.00", hazmat_class: hazmat, ships_worldwide: true, base_shipping_cost_usd: 18.0 }
+        },
+        {
+            id: `ali-fed-3-${Math.floor(Math.random() * 90000 + 10000)}`,
+            source_platform: "AliExpress",
+            source_listing_id: "ALI-FED-77192",
+            source_url: `https://www.aliexpress.com/wholesale?SearchText=${encQ}`,
+            source_logo_url: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop",
+            title: `High Precision Direct Fit ${cleanQ} Module for ${make} ${model}`,
+            brand: "AliExpress Direct",
+            manufacturer_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}-AL993`,
+            clean_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}AL993`,
+            interchange_part_numbers: [],
+            primary_image_url: catImg,
+            part_type: "Accessory",
+            aces_fitments: [{ make_name: make, model_name: model, year_start: 1999, year_end: 2026, pcdb_position: "Assembly" }],
+            pies_attributes: { weight_kg: 2.0, material: "OEM Spec Polycarbonate", dimensions_cm: { length: 30, width: 20, height: 10 } },
+            listing_type: "buy_now",
+            condition: "new_factory_sealed",
+            authenticity_tier: "aftermarket_economy",
+            buy_now_price: 45.00,
+            currency: "USD",
+            seller_name: "GlobalAuto_Sensors_Direct",
+            seller_rating: 4.78,
+            seller_country: "CN",
+            shipping: { hs_code: "8512.20.00", hazmat_class: hazmat, ships_worldwide: true, base_shipping_cost_usd: 12.0 }
         }
     ];
 }
@@ -1078,7 +1134,13 @@ function runClientSideEngine(params) {
             .replace(/\biii\b/g, "3")
             .replace(/\biv\b/g, "4")
             .replace(/\bii\b/g, "2")
-            .replace(/\bcrfp\b/g, "cfrp");
+            .replace(/\bcrfp\b/g, "cfrp")
+            .replace(/\bsiliva\b/g, "silvia")
+            .replace(/\bslivia\b/g, "silvia")
+            .replace(/\bsilva\b/g, "silvia")
+            .replace(/\bsklyine\b/g, "skyline")
+            .replace(/\bmaita\b/g, "miata")
+            .replace(/\bciviv\b/g, "civic");
     }
 
     const qNorm = normToken(query);
@@ -1095,7 +1157,8 @@ function runClientSideEngine(params) {
                 match = true;
             }
         } else {
-            const itemText = normToken(`${item.title} ${item.brand} ${item.part_type} ${item.clean_part_number}`);
+            const fitsStr = (item.aces_fitments || []).map(f => `${f.make_name} ${f.model_name} ${f.submodel_name || ""}`).join(" ");
+            const itemText = normToken(`${item.title} ${item.brand} ${item.part_type} ${item.clean_part_number} ${fitsStr}`);
             if (itemText.includes(qNorm)) {
                 match = true;
             } else if (qWords.length === 1) {

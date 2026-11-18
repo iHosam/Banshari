@@ -305,7 +305,7 @@ window.BANSHARI_CATALOG = [
     "buy_now_price": null,
     "current_bid": 95.0,
     "bid_count": 14,
-    "auction_end_time": "2026-11-18T12:14:21.979979Z",
+    "auction_end_time": "2026-11-18T12:46:32.106489Z",
     "seller_name": "BavarianSalvageRecyclers",
     "seller_rating": 4.95,
     "seller_country": "US",
@@ -648,7 +648,7 @@ window.BANSHARI_CATALOG = [
     "buy_now_price": null,
     "current_bid": 215.0,
     "bid_count": 8,
-    "auction_end_time": "2026-11-19T08:39:21.979979Z",
+    "auction_end_time": "2026-11-19T09:11:32.106489Z",
     "seller_name": "EuroParts_Direct_Warehouse",
     "seller_rating": 4.9,
     "seller_country": "DE",
@@ -729,7 +729,7 @@ window.BANSHARI_CATALOG = [
     "buy_now_price": null,
     "current_bid": 68.0,
     "bid_count": 21,
-    "auction_end_time": "2026-11-18T07:44:21.979979Z",
+    "auction_end_time": "2026-11-18T08:16:32.106489Z",
     "seller_name": "JDM_Tuning_Garage_Osaka",
     "seller_rating": 4.98,
     "seller_country": "JP",
@@ -1145,7 +1145,7 @@ window.BANSHARI_CATALOG = [
     "buy_now_price": null,
     "current_bid": 110.0,
     "bid_count": 18,
-    "auction_end_time": "2026-11-18T14:59:21.979979Z",
+    "auction_end_time": "2026-11-18T15:31:32.106489Z",
     "seller_name": "VAG_AutoParts_Poznan",
     "seller_rating": 4.91,
     "seller_country": "DE",
@@ -1308,7 +1308,7 @@ window.BANSHARI_CATALOG = [
     "buy_now_price": null,
     "current_bid": 180.0,
     "bid_count": 32,
-    "auction_end_time": "2026-11-18T09:39:21.979979Z",
+    "auction_end_time": "2026-11-18T10:11:32.106489Z",
     "seller_name": "Up Garage Machida Yokohama",
     "seller_rating": 4.95,
     "seller_country": "JP",
@@ -1655,7 +1655,7 @@ window.BANSHARI_CATALOG = [
     "buy_now_price": null,
     "current_bid": 148.0,
     "bid_count": 24,
-    "auction_end_time": "2026-11-18T11:14:21.979979Z",
+    "auction_end_time": "2026-11-18T11:46:32.106489Z",
     "seller_name": "JDM_Direct_Osaka",
     "seller_rating": 4.97,
     "seller_country": "JP",
@@ -2141,7 +2141,7 @@ window.BANSHARI_CATALOG = [
     "buy_now_price": null,
     "current_bid": 420.0,
     "bid_count": 31,
-    "auction_end_time": "2026-11-18T11:59:21.979979Z",
+    "auction_end_time": "2026-11-18T12:31:32.106489Z",
     "seller_name": "JDM_Tuning_Osaka",
     "seller_rating": 4.95,
     "seller_country": "JP",
@@ -2241,7 +2241,7 @@ window.BANSHARI_CATALOG = [
     "id": "ali-s15-led-tail",
     "source_platform": "AliExpress",
     "source_listing_id": "ALI-9844102",
-    "source_url": "https://www.aliexpress.com/wholesale?SearchText=ALI-S15-TL01",
+    "source_url": "https://www.aliexpress.com/wholesale?SearchText=Nissan%20Silvia%20S15%20Smoke%20LED%20DRL%20Tail%20Lights%20Assembly",
     "source_logo_url": "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop",
     "title": "Nissan Silvia S15 Smoke LED DRL Tail Lights Assembly (Direct Fit)",
     "brand": "AliExpress Direct",
@@ -2309,7 +2309,7 @@ window.BANSHARI_CATALOG = [
     "id": "ali-sr20det-coils",
     "source_platform": "AliExpress",
     "source_listing_id": "ALI-3819441",
-    "source_url": "https://www.aliexpress.com/wholesale?SearchText=22448-91F00-AL",
+    "source_url": "https://www.aliexpress.com/wholesale?SearchText=Ignition%20Coil%20Pack%20Set%20for%20Nissan%20SR20DET%20S14%20S15",
     "source_logo_url": "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop",
     "title": "High Performance Ignition Coil Pack Set for Nissan SR20DET S14 S15 (Set of 4)",
     "brand": "AliExpress Direct",
@@ -2372,6 +2372,139 @@ window.BANSHARI_CATALOG = [
       "ships_worldwide": true,
       "freight_forwarder_permitted": true,
       "base_shipping_cost_usd": 16.0
+    }
+  },
+  {
+    "id": "ali-s15-led-headlight",
+    "source_platform": "AliExpress",
+    "source_listing_id": "ALI-7721903",
+    "source_url": "https://www.aliexpress.com/wholesale?SearchText=Nissan%20Silvia%20S15%20Spec-R%20Full%20LED%20Projector%20Headlights%20Assembly",
+    "source_logo_url": "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop",
+    "title": "Nissan Silvia S15 Spec-R Full LED Projector Headlights Assembly (Pair)",
+    "brand": "AliExpress Direct",
+    "manufacturer_part_number": "ALI-S15-HL02",
+    "clean_part_number": "ALIS15HL02",
+    "interchange_part_numbers": [
+      "26010-85F00",
+      "26060-85F00"
+    ],
+    "primary_image_url": "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=600&h=450&fit=crop",
+    "additional_image_urls": [],
+    "part_type": "Lighting",
+    "aces_fitments": [
+      {
+        "base_vehicle_id": 118920,
+        "make_name": "Nissan",
+        "model_name": "Silvia",
+        "year_start": 1999,
+        "year_end": 2002,
+        "submodel_name": "Spec-R / Spec-S",
+        "engine_base_id": null,
+        "engine_description": null,
+        "pcdb_part_terminology_id": 9000,
+        "pcdb_position": "Front Headlamp Pair",
+        "notes": null
+      }
+    ],
+    "tecdoc_fitments": [],
+    "pies_attributes": {
+      "weight_kg": 5.8,
+      "dimensions_cm": {
+        "length": 55.0,
+        "width": 35.0,
+        "height": 25.0
+      },
+      "material": "UV Polycarbonate / Bi-LED Projectors",
+      "country_of_origin": "CN",
+      "warranty_months": 12,
+      "unspc_code": null
+    },
+    "listing_type": "buy_now",
+    "condition": "new_factory_sealed",
+    "authenticity_tier": "aftermarket_economy",
+    "currency": "USD",
+    "buy_now_price": 245.0,
+    "current_bid": null,
+    "bid_count": null,
+    "auction_end_time": null,
+    "seller_name": "Guangzhou_Auto_Lighting_Direct",
+    "seller_rating": 4.85,
+    "seller_country": "CN",
+    "shipping": {
+      "hs_code": "8512.20.00",
+      "hazmat_class": "none",
+      "air_freight_restricted": false,
+      "ships_to": [
+        "*"
+      ],
+      "ships_worldwide": true,
+      "freight_forwarder_permitted": true,
+      "base_shipping_cost_usd": 32.0
+    }
+  },
+  {
+    "id": "ali-s15-carbon-lip",
+    "source_platform": "AliExpress",
+    "source_listing_id": "ALI-5510291",
+    "source_url": "https://www.aliexpress.com/wholesale?SearchText=Nissan%20Silvia%20S15%20Front%20Bumper%20Lip%20Spoiler",
+    "source_logo_url": "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop",
+    "title": "Nissan Silvia S15 Front Bumper Lip Spoiler (Carbon Fiber Style Polyurethane)",
+    "brand": "AliExpress Direct",
+    "manufacturer_part_number": "ALI-S15-LIP03",
+    "clean_part_number": "ALIS15LIP03",
+    "interchange_part_numbers": [],
+    "primary_image_url": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&h=450&fit=crop",
+    "additional_image_urls": [],
+    "part_type": "Body Styling",
+    "aces_fitments": [
+      {
+        "base_vehicle_id": 118920,
+        "make_name": "Nissan",
+        "model_name": "Silvia",
+        "year_start": 1999,
+        "year_end": 2002,
+        "submodel_name": "Spec-R / Spec-S",
+        "engine_base_id": null,
+        "engine_description": null,
+        "pcdb_part_terminology_id": 9100,
+        "pcdb_position": "Front Lower Bumper",
+        "notes": null
+      }
+    ],
+    "tecdoc_fitments": [],
+    "pies_attributes": {
+      "weight_kg": 3.5,
+      "dimensions_cm": {
+        "length": 160.0,
+        "width": 45.0,
+        "height": 15.0
+      },
+      "material": "Flexible Polyurethane / Hydro-dip Carbon",
+      "country_of_origin": "CN",
+      "warranty_months": 12,
+      "unspc_code": null
+    },
+    "listing_type": "buy_now",
+    "condition": "new_factory_sealed",
+    "authenticity_tier": "aftermarket_economy",
+    "currency": "USD",
+    "buy_now_price": 115.0,
+    "current_bid": null,
+    "bid_count": null,
+    "auction_end_time": null,
+    "seller_name": "AeroDynamics_Factory_Direct",
+    "seller_rating": 4.76,
+    "seller_country": "CN",
+    "shipping": {
+      "hs_code": "8708.29.90",
+      "hazmat_class": "none",
+      "air_freight_restricted": false,
+      "ships_to": [
+        "*"
+      ],
+      "ships_worldwide": true,
+      "freight_forwarder_permitted": true,
+      "base_shipping_cost_usd": 38.0
     }
   }
 ];

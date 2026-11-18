@@ -79,6 +79,13 @@ class SearchEngine:
             t = re.sub(r'\biv\b', '4', t)
             t = re.sub(r'\bii\b', '2', t)
             t = re.sub(r'\bcrfp\b', 'cfrp', t)
+            t = re.sub(r'\bsiliva\b', 'silvia', t)
+            t = re.sub(r'\bslivia\b', 'silvia', t)
+            t = re.sub(r'\bsilva\b', 'silvia', t)
+            t = re.sub(r'\bsklyine\b', 'skyline', t)
+            t = re.sub(r'\bskiline\b', 'skyline', t)
+            t = re.sub(r'\bmaita\b', 'miata', t)
+            t = re.sub(r'\bciviv\b', 'civic', t)
             return t
 
         for item in self.catalog:
@@ -109,7 +116,8 @@ class SearchEngine:
                     matches_query = True
             else:
                 # Keyword search with automotive synonym expansion & token matching
-                item_text_raw = f"{item.title} {item.brand} {item.part_type} {item.clean_part_number}"
+                fits_str = " ".join(f"{f.make_name} {f.model_name} {f.submodel_name or ''}" for f in item.aces_fitments)
+                item_text_raw = f"{item.title} {item.brand} {item.part_type} {item.clean_part_number} {fits_str}"
                 item_text = _norm_token_str(item_text_raw)
                 q_norm = _norm_token_str(query)
                 q_words = [w for w in q_norm.split() if len(w) > 1 and w not in ["with", "for", "the", "and", "in", "of"]]

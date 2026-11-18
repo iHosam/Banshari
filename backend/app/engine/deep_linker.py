@@ -105,8 +105,17 @@ class DeepLinker:
             return f"https://www.megazip.net/search?q={encoded_query}"
 
         elif "aliexpress" in p:
-            # AliExpress direct global marketplace search
-            return f"https://www.aliexpress.com/wholesale?SearchText={encoded_query}"
+            # AliExpress marketplace: sellers index by natural vehicle & part descriptors, never internal factory SKUs.
+            if user_query and user_query.strip():
+                ali_q = user_query.strip()
+            elif title and title.strip():
+                import re
+                cleaned_title = re.sub(r'\(.*?\)', '', title).strip()
+                cleaned_title = re.sub(r'^(Factory Direct|Direct Fit|High Performance)\s*', '', cleaned_title, flags=re.IGNORECASE).strip()
+                ali_q = cleaned_title if cleaned_title else title.strip()
+            else:
+                ali_q = f"{make} {mpn}".strip() if make else (mpn or clean_pn)
+            return f"https://www.aliexpress.com/wholesale?SearchText={urllib.parse.quote(ali_q)}"
 
         elif "car-part" in p:
             # Car-Part salvage OEM search on eBay Motors Parts & Accessories

@@ -125,6 +125,14 @@ class QueryParser:
              'mk4 supra wing' -> Toyota Supra JZA80 (1993-2002)
         """
         upper_q = query.upper()
+        # Enthusiast typo normalization
+        upper_q = re.sub(r'\bSILIVA\b', 'SILVIA', upper_q)
+        upper_q = re.sub(r'\bSLIVIA\b', 'SILVIA', upper_q)
+        upper_q = re.sub(r'\bSILVA\b', 'SILVIA', upper_q)
+        upper_q = re.sub(r'\bSKLYINE\b', 'SKYLINE', upper_q)
+        upper_q = re.sub(r'\bSKILINE\b', 'SKYLINE', upper_q)
+        upper_q = re.sub(r'\bMAITA\b', 'MIATA', upper_q)
+        upper_q = re.sub(r'\bCIVIV\b', 'CIVIC', upper_q)
         tokens = re.split(r'[\s\-_]+', upper_q)
 
         # Check direct chassis codes
