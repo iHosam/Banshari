@@ -127,10 +127,20 @@ class TestBanshariEngine(unittest.TestCase):
         self.assertIn("Amayama", platforms)
         self.assertIn("AliExpress", platforms)
 
-        # Check deep links have working, non-empty URLs with relevant parameters
+        # Check deep links have working, direct PDP listing URLs (not search result pages)
         for r in res.results:
-            self.assertTrue(r.listing.source_url.startswith("https://"))
-            self.assertTrue(any(term in r.listing.source_url.lower() for term in ["s15", "headlight", "light"]))
+            url = r.listing.source_url
+            self.assertTrue(url.startswith("https://"))
+            # Must NOT be a search query results URL
+            self.assertNotIn("/sch/", url)
+            self.assertNotIn("/search", url)
+            self.assertNotIn("/wholesale", url)
+            self.assertNotIn("SearchText=", url)
+            self.assertNotIn("?q=", url)
+            # Must be a direct product / item detail listing URL
+            self.assertTrue(any(pattern in url for pattern in [
+                "/itm/", "/auction/", "/cparts/", "/item/", "/part/", "/parts/", "auto-parts", "autodoc.de", "/oferta/", "/zapchasti-dlya/"
+            ]))
 
         # Verify ACES vehicle resolution resolved to Nissan Silvia S15
         s15_listing = res.results[0].listing
@@ -144,11 +154,13 @@ class TestBanshariEngine(unittest.TestCase):
         ali_results = [r for r in res.results if r.listing.source_platform == "AliExpress"]
         self.assertGreaterEqual(len(ali_results), 3)
 
-        # Verify deep link contains descriptive product search, NOT dummy internal SKU
+        # Verify deep links direct to the actual item listing PDP (not a search page)
         for r in ali_results:
-            self.assertTrue(r.listing.source_url.startswith("https://www.aliexpress.com/wholesale?SearchText="))
-            self.assertNotIn("ALI-S15-TL01", r.listing.source_url)
-            self.assertNotIn("ALIS15TL01", r.listing.source_url)
+            url = r.listing.source_url
+            self.assertTrue(url.startswith("https://www.aliexpress.com/item/"))
+            self.assertTrue(url.endswith(".html"))
+            self.assertNotIn("wholesale", url)
+            self.assertNotIn("SearchText", url)
 
 if __name__ == "__main__":
     unittest.main()

@@ -1703,5 +1703,6 @@ for _item in MOCK_CATALOG:
         clean_pn=_item.clean_part_number,
         title=_item.title,
         make=_make,
-        brand=_item.brand
+        brand=_item.brand,
+        listing_id=_item.source_listing_id
     )
