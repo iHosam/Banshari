@@ -104,6 +104,10 @@ class DeepLinker:
             # Megazip genuine OEM search
             return f"https://www.megazip.net/search?q={encoded_query}"
 
+        elif "aliexpress" in p:
+            # AliExpress direct global marketplace search
+            return f"https://www.aliexpress.com/wholesale?SearchText={encoded_query}"
+
         elif "car-part" in p:
             # Car-Part salvage OEM search on eBay Motors Parts & Accessories
             return f"https://www.ebay.com/sch/i.html?_nkw={encoded_query}+OEM&_sacat=6000"

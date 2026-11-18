@@ -125,6 +125,7 @@ class TestBanshariEngine(unittest.TestCase):
         self.assertIn("Up Garage", platforms)
         self.assertIn("eBay Motors", platforms)
         self.assertIn("Amayama", platforms)
+        self.assertIn("AliExpress", platforms)
 
         # Check deep links have working, non-empty URLs with relevant parameters
         for r in res.results:

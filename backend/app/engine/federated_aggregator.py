@@ -37,7 +37,8 @@ class FederatedAggregator:
         "Car-Part.com": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=100&h=100&fit=crop",
         "FCP Euro": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=100&h=100&fit=crop",
         "ECS Tuning": "https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=100&h=100&fit=crop",
-        "Summit Racing": "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop"
+        "Summit Racing": "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop",
+        "AliExpress": "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop"
     }
 
     CATEGORY_IMAGES = {
@@ -659,6 +660,60 @@ class FederatedAggregator:
                     ships_to=["*"],
                     ships_worldwide=True,
                     base_shipping_cost_usd=50.00
+                )
+            )
+        )
+
+        # Platform 11: AliExpress (Direct Global Factory Replacement)
+        ali_title = f"Factory Direct {clean_q.title()} for {make} {model} (OEM Spec Fit)"
+        ali_url = f"https://www.aliexpress.com/wholesale?SearchText={urllib.parse.quote(search_kw)}"
+        listings.append(
+            UnifiedPartListing(
+                id=f"ali-fed-{abs(hash(clean_q)) % 100000}",
+                source_platform="AliExpress",
+                source_listing_id=f"ALI-FED-{abs(hash(clean_q)) % 999999}",
+                source_url=ali_url,
+                source_logo_url=cls.PLATFORM_LOGOS["AliExpress"],
+                title=ali_title,
+                brand="AliExpress Direct",
+                manufacturer_part_number=clean_pn or f"{make[:3].upper()}-AL991",
+                clean_part_number=clean_pn or f"{make[:3].upper()}AL991",
+                interchange_part_numbers=[],
+                primary_image_url=img_url,
+                part_type=cat.title(),
+                aces_fitments=[
+                    ACESFitment(
+                        base_vehicle_id=pcdb_id,
+                        make_name=make,
+                        model_name=model,
+                        year_start=year_start,
+                        year_end=year_end,
+                        pcdb_part_terminology_id=9000,
+                        pcdb_position="Direct Fit"
+                    )
+                ],
+                tecdoc_fitments=[],
+                pies_attributes=PIESAttributes(
+                    weight_kg=4.5,
+                    dimensions_cm={"length": 48.0, "width": 28.0, "height": 18.0},
+                    material="OEM Specification",
+                    warranty_months=12
+                ),
+                listing_type=ListingType.BUY_NOW,
+                condition=ItemCondition.NEW_SEALED,
+                authenticity_tier=AuthenticityTier.AFTERMARKET_VALUE,
+                buy_now_price=165.00,
+                currency="USD",
+                seller_name="AutoParts_Factory_Direct",
+                seller_rating=4.75,
+                seller_country="CN",
+                shipping=ShippingCompliance(
+                    hs_code="8512.20.00" if cat == "lighting" else "8708.29.90",
+                    hazmat_class=hazmat,
+                    air_freight_restricted=air_restricted,
+                    ships_to=["*"],
+                    ships_worldwide=True,
+                    base_shipping_cost_usd=25.00
                 )
             )
         )

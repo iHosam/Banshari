@@ -1490,6 +1490,106 @@ MOCK_CATALOG: List[UnifiedPartListing] = [
             ships_worldwide=True,
             base_shipping_cost_usd=85.00
         )
+    ),
+    # 28. AliExpress - Nissan Silvia S15 Smoke LED DRL Tail Lights Assembly (Direct Fit)
+    UnifiedPartListing(
+        id="ali-s15-led-tail",
+        source_platform="AliExpress",
+        source_listing_id="ALI-9844102",
+        source_url="https://www.aliexpress.com/wholesale?SearchText=s15+tail+lights",
+        source_logo_url="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop",
+        title="Nissan Silvia S15 Smoke LED DRL Tail Lights Assembly (Direct Fit)",
+        brand="AliExpress Direct",
+        manufacturer_part_number="ALI-S15-TL01",
+        clean_part_number="ALIS15TL01",
+        interchange_part_numbers=["B6550-85F00", "B6555-85F00"],
+        primary_image_url="https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=600&h=450&fit=crop",
+        part_type="Lighting",
+        aces_fitments=[
+            ACESFitment(
+                base_vehicle_id=118920,
+                make_name="Nissan",
+                model_name="Silvia",
+                year_start=1999,
+                year_end=2002,
+                submodel_name="Spec-R / Spec-S",
+                pcdb_part_terminology_id=9000,
+                pcdb_position="Rear Assembly Left & Right Pair"
+            )
+        ],
+        tecdoc_fitments=[],
+        pies_attributes=PIESAttributes(
+            weight_kg=4.2,
+            dimensions_cm={"length": 45.0, "width": 30.0, "height": 22.0},
+            material="OEM Polycarbonate / LED Boards",
+            country_of_origin="CN",
+            warranty_months=12
+        ),
+        listing_type=ListingType.BUY_NOW,
+        condition=ItemCondition.NEW_SEALED,
+        authenticity_tier=AuthenticityTier.AFTERMARKET_VALUE,
+        currency="USD",
+        buy_now_price=189.00,
+        seller_name="Guangzhou_Auto_Lighting_Direct",
+        seller_rating=4.82,
+        seller_country="CN",
+        shipping=ShippingCompliance(
+            hs_code="8512.20.00",
+            hazmat_class=HazmatClass.NONE,
+            ships_to=["*"],
+            ships_worldwide=True,
+            base_shipping_cost_usd=28.00
+        )
+    ),
+    # 29. AliExpress - High Performance Ignition Coil Pack Set for Nissan SR20DET (Pack of 4)
+    UnifiedPartListing(
+        id="ali-sr20det-coils",
+        source_platform="AliExpress",
+        source_listing_id="ALI-3819441",
+        source_url="https://www.aliexpress.com/wholesale?SearchText=sr20det+coilpack",
+        source_logo_url="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop",
+        title="High Performance Ignition Coil Pack Set for Nissan SR20DET S14 S15 (Set of 4)",
+        brand="AliExpress Direct",
+        manufacturer_part_number="22448-91F00-AL",
+        clean_part_number="2244891F00AL",
+        interchange_part_numbers=["22448-91F00", "2244891F00", "DIS-005"],
+        primary_image_url="https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=600&h=450&fit=crop",
+        part_type="Ignition Coil",
+        aces_fitments=[
+            ACESFitment(
+                base_vehicle_id=118920,
+                make_name="Nissan",
+                model_name="Silvia",
+                year_start=1993,
+                year_end=2002,
+                submodel_name="SR20DET",
+                pcdb_part_terminology_id=7000,
+                pcdb_position="Engine Bay / Cylinder Head"
+            )
+        ],
+        tecdoc_fitments=[],
+        pies_attributes=PIESAttributes(
+            weight_kg=1.8,
+            dimensions_cm={"length": 25.0, "width": 18.0, "height": 12.0},
+            material="High Temp Copper / Epoxy",
+            country_of_origin="CN",
+            warranty_months=12
+        ),
+        listing_type=ListingType.BUY_NOW,
+        condition=ItemCondition.NEW_SEALED,
+        authenticity_tier=AuthenticityTier.AFTERMARKET_VALUE,
+        currency="USD",
+        buy_now_price=78.50,
+        seller_name="RacingPower_Direct_Store",
+        seller_rating=4.79,
+        seller_country="CN",
+        shipping=ShippingCompliance(
+            hs_code="8511.30.00",
+            hazmat_class=HazmatClass.NONE,
+            ships_to=["*"],
+            ships_worldwide=True,
+            base_shipping_cost_usd=16.00
+        )
     )
 ]
 

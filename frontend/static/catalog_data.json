@@ -305,7 +305,7 @@
     "buy_now_price": null,
     "current_bid": 95.0,
     "bid_count": 14,
-    "auction_end_time": "2026-11-17T16:30:46.933010Z",
+    "auction_end_time": "2026-11-18T12:14:21.979979Z",
     "seller_name": "BavarianSalvageRecyclers",
     "seller_rating": 4.95,
     "seller_country": "US",
@@ -648,7 +648,7 @@
     "buy_now_price": null,
     "current_bid": 215.0,
     "bid_count": 8,
-    "auction_end_time": "2026-11-18T12:55:46.933010Z",
+    "auction_end_time": "2026-11-19T08:39:21.979979Z",
     "seller_name": "EuroParts_Direct_Warehouse",
     "seller_rating": 4.9,
     "seller_country": "DE",
@@ -729,7 +729,7 @@
     "buy_now_price": null,
     "current_bid": 68.0,
     "bid_count": 21,
-    "auction_end_time": "2026-11-17T12:00:46.933010Z",
+    "auction_end_time": "2026-11-18T07:44:21.979979Z",
     "seller_name": "JDM_Tuning_Garage_Osaka",
     "seller_rating": 4.98,
     "seller_country": "JP",
@@ -1092,7 +1092,7 @@
     "source_listing_id": "ALL-PL-9821034",
     "source_url": "https://allegro.pl/listing?string=8W0%20821%20106%20B",
     "source_logo_url": "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop",
-    "title": "Oryginalny B\u0142otnik Prz\u00f3d Prawy Audi A4 B9 S-Line Mythos Black (Used Grade A)",
+    "title": "Oryginalny Błotnik Przód Prawy Audi A4 B9 S-Line Mythos Black (Used Grade A)",
     "brand": "Audi Genuine",
     "manufacturer_part_number": "8W0 821 106 B",
     "clean_part_number": "8W0821106B",
@@ -1145,7 +1145,7 @@
     "buy_now_price": null,
     "current_bid": 110.0,
     "bid_count": 18,
-    "auction_end_time": "2026-11-17T19:15:46.933010Z",
+    "auction_end_time": "2026-11-18T14:59:21.979979Z",
     "seller_name": "VAG_AutoParts_Poznan",
     "seller_rating": 4.91,
     "seller_country": "DE",
@@ -1308,7 +1308,7 @@
     "buy_now_price": null,
     "current_bid": 180.0,
     "bid_count": 32,
-    "auction_end_time": "2026-11-17T13:55:46.933010Z",
+    "auction_end_time": "2026-11-18T09:39:21.979979Z",
     "seller_name": "Up Garage Machida Yokohama",
     "seller_rating": 4.95,
     "seller_country": "JP",
@@ -1655,7 +1655,7 @@
     "buy_now_price": null,
     "current_bid": 148.0,
     "bid_count": 24,
-    "auction_end_time": "2026-11-17T15:30:46.933010Z",
+    "auction_end_time": "2026-11-18T11:14:21.979979Z",
     "seller_name": "JDM_Direct_Osaka",
     "seller_rating": 4.97,
     "seller_country": "JP",
@@ -2141,7 +2141,7 @@
     "buy_now_price": null,
     "current_bid": 420.0,
     "bid_count": 31,
-    "auction_end_time": "2026-11-17T16:15:46.933010Z",
+    "auction_end_time": "2026-11-18T11:59:21.979979Z",
     "seller_name": "JDM_Tuning_Osaka",
     "seller_rating": 4.95,
     "seller_country": "JP",
@@ -2235,6 +2235,143 @@
       "ships_worldwide": true,
       "freight_forwarder_permitted": true,
       "base_shipping_cost_usd": 85.0
+    }
+  },
+  {
+    "id": "ali-s15-led-tail",
+    "source_platform": "AliExpress",
+    "source_listing_id": "ALI-9844102",
+    "source_url": "https://www.aliexpress.com/wholesale?SearchText=ALI-S15-TL01",
+    "source_logo_url": "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop",
+    "title": "Nissan Silvia S15 Smoke LED DRL Tail Lights Assembly (Direct Fit)",
+    "brand": "AliExpress Direct",
+    "manufacturer_part_number": "ALI-S15-TL01",
+    "clean_part_number": "ALIS15TL01",
+    "interchange_part_numbers": [
+      "B6550-85F00",
+      "B6555-85F00"
+    ],
+    "primary_image_url": "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=600&h=450&fit=crop",
+    "additional_image_urls": [],
+    "part_type": "Lighting",
+    "aces_fitments": [
+      {
+        "base_vehicle_id": 118920,
+        "make_name": "Nissan",
+        "model_name": "Silvia",
+        "year_start": 1999,
+        "year_end": 2002,
+        "submodel_name": "Spec-R / Spec-S",
+        "engine_base_id": null,
+        "engine_description": null,
+        "pcdb_part_terminology_id": 9000,
+        "pcdb_position": "Rear Assembly Left & Right Pair",
+        "notes": null
+      }
+    ],
+    "tecdoc_fitments": [],
+    "pies_attributes": {
+      "weight_kg": 4.2,
+      "dimensions_cm": {
+        "length": 45.0,
+        "width": 30.0,
+        "height": 22.0
+      },
+      "material": "OEM Polycarbonate / LED Boards",
+      "country_of_origin": "CN",
+      "warranty_months": 12,
+      "unspc_code": null
+    },
+    "listing_type": "buy_now",
+    "condition": "new_factory_sealed",
+    "authenticity_tier": "aftermarket_economy",
+    "currency": "USD",
+    "buy_now_price": 189.0,
+    "current_bid": null,
+    "bid_count": null,
+    "auction_end_time": null,
+    "seller_name": "Guangzhou_Auto_Lighting_Direct",
+    "seller_rating": 4.82,
+    "seller_country": "CN",
+    "shipping": {
+      "hs_code": "8512.20.00",
+      "hazmat_class": "none",
+      "air_freight_restricted": false,
+      "ships_to": [
+        "*"
+      ],
+      "ships_worldwide": true,
+      "freight_forwarder_permitted": true,
+      "base_shipping_cost_usd": 28.0
+    }
+  },
+  {
+    "id": "ali-sr20det-coils",
+    "source_platform": "AliExpress",
+    "source_listing_id": "ALI-3819441",
+    "source_url": "https://www.aliexpress.com/wholesale?SearchText=22448-91F00-AL",
+    "source_logo_url": "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop",
+    "title": "High Performance Ignition Coil Pack Set for Nissan SR20DET S14 S15 (Set of 4)",
+    "brand": "AliExpress Direct",
+    "manufacturer_part_number": "22448-91F00-AL",
+    "clean_part_number": "2244891F00AL",
+    "interchange_part_numbers": [
+      "22448-91F00",
+      "2244891F00",
+      "DIS-005"
+    ],
+    "primary_image_url": "https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=600&h=450&fit=crop",
+    "additional_image_urls": [],
+    "part_type": "Ignition Coil",
+    "aces_fitments": [
+      {
+        "base_vehicle_id": 118920,
+        "make_name": "Nissan",
+        "model_name": "Silvia",
+        "year_start": 1993,
+        "year_end": 2002,
+        "submodel_name": "SR20DET",
+        "engine_base_id": null,
+        "engine_description": null,
+        "pcdb_part_terminology_id": 7000,
+        "pcdb_position": "Engine Bay / Cylinder Head",
+        "notes": null
+      }
+    ],
+    "tecdoc_fitments": [],
+    "pies_attributes": {
+      "weight_kg": 1.8,
+      "dimensions_cm": {
+        "length": 25.0,
+        "width": 18.0,
+        "height": 12.0
+      },
+      "material": "High Temp Copper / Epoxy",
+      "country_of_origin": "CN",
+      "warranty_months": 12,
+      "unspc_code": null
+    },
+    "listing_type": "buy_now",
+    "condition": "new_factory_sealed",
+    "authenticity_tier": "aftermarket_economy",
+    "currency": "USD",
+    "buy_now_price": 78.5,
+    "current_bid": null,
+    "bid_count": null,
+    "auction_end_time": null,
+    "seller_name": "RacingPower_Direct_Store",
+    "seller_rating": 4.79,
+    "seller_country": "CN",
+    "shipping": {
+      "hs_code": "8511.30.00",
+      "hazmat_class": "none",
+      "air_freight_restricted": false,
+      "ships_to": [
+        "*"
+      ],
+      "ships_worldwide": true,
+      "freight_forwarder_permitted": true,
+      "base_shipping_cost_usd": 16.0
     }
   }
 ]

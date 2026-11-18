@@ -354,7 +354,8 @@ function updateFacetCounts(facets) {
         "Amayama": "count-amayama",
         "Up Garage": "count-upgarage",
         "Croooober": "count-upgarage",
-        "Megazip": "count-megazip"
+        "Megazip": "count-megazip",
+        "AliExpress": "count-aliexpress"
     };
 
     // Reset all to 0
@@ -999,6 +1000,31 @@ function generateFederatedListingsClient(query, cleanPn, destCountry) {
             seller_rating: 4.8,
             seller_country: "PT",
             shipping: { hs_code: "8512.20.00", hazmat_class: hazmat, ships_worldwide: true, base_shipping_cost_usd: 58.0 }
+        },
+        {
+            id: `ali-fed-${Math.floor(Math.random() * 90000 + 10000)}`,
+            source_platform: "AliExpress",
+            source_listing_id: "ALI-FED-99214",
+            source_url: `https://www.aliexpress.com/wholesale?SearchText=${encQ}`,
+            source_logo_url: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop",
+            title: `Factory Direct ${cleanQ} for ${make} ${model} (OEM Spec Fit)`,
+            brand: "AliExpress Direct",
+            manufacturer_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}-AL991`,
+            clean_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}AL991`,
+            interchange_part_numbers: [],
+            primary_image_url: catImg,
+            part_type: "Replacement Part",
+            aces_fitments: [{ make_name: make, model_name: model, year_start: 1999, year_end: 2026, pcdb_position: "Direct Fit" }],
+            pies_attributes: { weight_kg: 4.5, material: "OEM Specification Polycarbonate / Aluminum", dimensions_cm: { length: 48, width: 28, height: 18 } },
+            listing_type: "buy_now",
+            condition: "new_factory_sealed",
+            authenticity_tier: "aftermarket_economy",
+            buy_now_price: 165.00,
+            currency: "USD",
+            seller_name: "AutoParts_Factory_Direct",
+            seller_rating: 4.75,
+            seller_country: "CN",
+            shipping: { hs_code: "8512.20.00", hazmat_class: hazmat, ships_worldwide: true, base_shipping_cost_usd: 25.0 }
         }
     ];
 }
