@@ -1114,12 +1114,6 @@ function generateFederatedListingsClient(query, cleanPn, destCountry) {
         }
     ];
 }
-            seller_rating: 4.78,
-            seller_country: "CN",
-            shipping: { hs_code: "8512.20.00", hazmat_class: hazmat, ships_worldwide: true, base_shipping_cost_usd: 12.0 }
-        }
-    ];
-}
 
 function runClientSideEngine(params) {
     const query = (params.query || "").trim();
