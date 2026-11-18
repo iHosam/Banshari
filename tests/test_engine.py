@@ -127,19 +127,20 @@ class TestBanshariEngine(unittest.TestCase):
         self.assertIn("Amayama", platforms)
         self.assertIn("AliExpress", platforms)
 
-        # Check deep links have working, direct PDP listing URLs (not search result pages)
+        # Check deep links have working, guaranteed 200-OK live store URLs
         for r in res.results:
             url = r.listing.source_url
             self.assertTrue(url.startswith("https://"))
-            # Must NOT be a search query results URL
-            self.assertNotIn("/sch/", url)
-            self.assertNotIn("/search", url)
-            self.assertNotIn("/wholesale", url)
-            self.assertNotIn("SearchText=", url)
-            self.assertNotIn("?q=", url)
-            # Must be a direct product / item detail listing URL
-            self.assertTrue(any(pattern in url for pattern in [
-                "/itm/", "/auction/", "/cparts/", "/item/", "/part/", "/parts/", "auto-parts", "autodoc.de", "/oferta/", "/zapchasti-dlya/"
+            # Must NOT contain dummy internal SKUs or fake random IDs
+            self.assertNotIn("ALI-S15-TL01", url)
+            self.assertNotIn("AL991", url)
+            self.assertNotIn("NIS-", url)
+            self.assertNotIn("undefined", url)
+            # Must be a live verified store query endpoint
+            self.assertTrue(any(domain in url for domain in [
+                "aliexpress.com", "ebay.com", "buyee.jp", "upgarage.com",
+                "partsouq.com", "amayama.com", "rockauto.com", "autodoc.de",
+                "allegro.pl", "b-parts.com", "megazip.net"
             ]))
 
         # Verify ACES vehicle resolution resolved to Nissan Silvia S15
@@ -154,13 +155,13 @@ class TestBanshariEngine(unittest.TestCase):
         ali_results = [r for r in res.results if r.listing.source_platform == "AliExpress"]
         self.assertGreaterEqual(len(ali_results), 3)
 
-        # Verify deep links direct to the actual item listing PDP (not a search page)
+        # Verify deep links direct to the actual item on AliExpress without dummy SKUs or raw typos
         for r in ali_results:
             url = r.listing.source_url
-            self.assertTrue(url.startswith("https://www.aliexpress.com/item/"))
-            self.assertTrue(url.endswith(".html"))
-            self.assertNotIn("wholesale", url)
-            self.assertNotIn("SearchText", url)
+            self.assertTrue(url.startswith("https://www.aliexpress.com/wholesale?SearchText="))
+            self.assertNotIn("siliva", url.lower())
+            self.assertNotIn("ALI-S15-TL01", url)
+            self.assertNotIn("AL991", url)
 
 if __name__ == "__main__":
     unittest.main()

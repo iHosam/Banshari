@@ -1,6 +1,6 @@
 # Banshari (منشاري) — Global Automotive Spare Parts Metasearch Engine & Landed Cost Aggregator
 
-![Version](https://img.shields.io/badge/version-1.0.2-orange.svg) ![Build](https://img.shields.io/badge/build-passing-brightgreen.svg) ![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Version](https://img.shields.io/badge/version-1.0.4-orange.svg) ![Build](https://img.shields.io/badge/build-passing-brightgreen.svg) ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
 **Banshari** is a production-grade, federated automotive spare parts metasearch engine and international landed-cost aggregator. It aggregates listings in real time across global retailers, salvage networks, and auction houses (eBay Motors, RockAuto, Partsouq, AutoDoc, Yahoo! Auctions Japan / Buyee, AliExpress, and Car-Part.com), normalizing fitment against international automotive catalog standards and computing CIF landed costs (Customs Duty + Import VAT/GST + Air/Ocean Freight) for any destination country worldwide.
 

@@ -12,7 +12,7 @@ from .api.routes import router as api_router
 app = FastAPI(
     title="Banshari Automotive Metasearch",
     description="Global Automotive Spare Parts Metasearch Engine & Landed Cost Aggregator",
-    version="1.0.3"
+    version="1.0.4"
 )
 
 # Enable CORS for cross-origin or local development

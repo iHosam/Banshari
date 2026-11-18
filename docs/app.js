@@ -781,12 +781,42 @@ function calculateLandedCostClient(priceUsd, weightKg, destCountry, targetCurren
 }
 
 function generateFederatedListingsClient(query, cleanPn, destCountry) {
-    const vCtx = resolveVehicleClient(query);
+    function normToken(s) {
+        return (s || "").toLowerCase()
+            .replace(/\biii\b/g, "3")
+            .replace(/\biv\b/g, "4")
+            .replace(/\bii\b/g, "2")
+            .replace(/\bcrfp\b/g, "cfrp")
+            .replace(/\bsiliva\b/g, "silvia")
+            .replace(/\bslivia\b/g, "silvia")
+            .replace(/\bsilva\b/g, "silvia")
+            .replace(/\bsklyine\b/g, "skyline")
+            .replace(/\bmaita\b/g, "miata")
+            .replace(/\bciviv\b/g, "civic");
+    }
+
+    const cleanQ = normToken(query).trim();
+    const vCtx = resolveVehicleClient(cleanQ);
     const make = vCtx ? vCtx.make : "Universal";
     const model = vCtx ? vCtx.model : "Automotive";
     const gen = vCtx ? vCtx.generation : "";
-    const cleanQ = query.trim();
-    const encQ = encodeURIComponent(cleanQ);
+
+    // Extract part description by removing vehicle brand, model, generation words
+    let partDesc = cleanQ;
+    const toRemove = [make, model, gen, "nissan", "toyota", "bmw", "honda", "mazda", "subaru", "mitsubishi"];
+    for (const r of toRemove) {
+        if (r && r.length > 2) {
+            const re = new RegExp(`\\b${r}\\b`, "gi");
+            partDesc = partDesc.replace(re, "").trim();
+        }
+    }
+    partDesc = partDesc.replace(/\s+/g, " ").trim();
+    const partDescTitle = partDesc ? (partDesc.charAt(0).toUpperCase() + partDesc.slice(1)) : "Parts & Accessories";
+
+    const targetPhrase = (make && make !== "Universal" ? `${make} ${model} ${partDescTitle}` : `${model} ${partDescTitle}`).trim();
+    const encTarget = encodeURIComponent(targetPhrase);
+    const hasRealPn = cleanPn && cleanPn.length >= 5 && !cleanPn.startsWith("PSQ") && !cleanPn.startsWith("MGZ") && !cleanPn.startsWith("ATD") && !cleanPn.startsWith("BPT") && !cleanPn.startsWith("ALI");
+    const encPnOrTarget = hasRealPn ? encodeURIComponent(cleanPn) : encTarget;
 
     const isAirbag = cleanQ.toLowerCase().includes("airbag");
     const hazmat = isAirbag ? "class_1_airbag_inflator" : "none";
@@ -807,9 +837,9 @@ function generateFederatedListingsClient(query, cleanPn, destCountry) {
             id: `yj-fed-${Math.floor(Math.random() * 90000 + 10000)}`,
             source_platform: "Yahoo! Auctions Japan",
             source_listing_id: `YJ-w${Math.floor(Math.random() * 899999999 + 100000000)}`,
-            source_url: `https://buyee.jp/item/yahoo/auction/w${Math.floor(Math.random() * 899999999 + 100000000)}`,
+            source_url: `https://buyee.jp/item/search/query/${encTarget}?translationType=1`,
             source_logo_url: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=100&h=100&fit=crop",
-            title: `JDM OEM ${make} ${model} ${gen} ${cleanQ} (Genuine Japan)`,
+            title: `JDM OEM ${make} ${model} ${gen} ${partDescTitle} (Genuine Japan)`,
             brand: `${make} OEM`,
             manufacturer_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}-85F00`,
             clean_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}85F00`,
@@ -834,9 +864,9 @@ function generateFederatedListingsClient(query, cleanPn, destCountry) {
             id: `upg-fed-${Math.floor(Math.random() * 90000 + 10000)}`,
             source_platform: "Up Garage",
             source_listing_id: `UPG-${Math.floor(Math.random() * 8999999 + 1000000)}`,
-            source_url: `https://www.croooober.com/en/item/cparts/${Math.floor(Math.random() * 8999999 + 1000000)}`,
+            source_url: `https://www.upgarage.com/en/ec/search?q=${encTarget}`,
             source_logo_url: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=100&h=100&fit=crop",
-            title: `Up Garage JDM ${make} ${model} ${cleanQ} - Grade A Used`,
+            title: `Up Garage JDM ${make} ${model} ${partDescTitle} - Grade A Used`,
             brand: `${make} Genuine`,
             manufacturer_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}-85F01`,
             clean_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}85F01`,
@@ -859,9 +889,9 @@ function generateFederatedListingsClient(query, cleanPn, destCountry) {
             id: `ebay-fed-${Math.floor(Math.random() * 90000 + 10000)}`,
             source_platform: "eBay Motors",
             source_listing_id: `EBAY-${Math.floor(Math.random() * 899999999999 + 100000000000)}`,
-            source_url: `https://www.ebay.com/itm/${Math.floor(Math.random() * 899999999999 + 100000000000)}`,
+            source_url: `https://www.ebay.com/sch/i.html?_nkw=${encTarget}&_sacat=6000`,
             source_logo_url: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop",
-            title: `OEM Genuine ${make} ${model} ${cleanQ} - Rare Original`,
+            title: `OEM Genuine ${make} ${model} ${partDescTitle} - Rare Original`,
             brand: `${make} OEM`,
             manufacturer_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}-85F02`,
             clean_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}85F02`,
@@ -886,9 +916,9 @@ function generateFederatedListingsClient(query, cleanPn, destCountry) {
             id: `amayama-fed-${Math.floor(Math.random() * 90000 + 10000)}`,
             source_platform: "Amayama",
             source_listing_id: `AMAYAMA-${Math.floor(Math.random() * 899999 + 100000)}`,
-            source_url: `https://www.amayama.com/en/part/${(make || "nissan").toLowerCase().replace(/[^a-z0-9]/g, "")}/${(cleanPn || `${(make || "nissan").toLowerCase().replace(/[^a-z0-9]/g, "")}85f03`).toLowerCase().replace(/[^a-z0-9]/g, "")}`,
+            source_url: `https://www.amayama.com/en/search?q=${encPnOrTarget}`,
             source_logo_url: "https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=100&h=100&fit=crop",
-            title: `${make} Genuine Parts ${cleanQ} - Factory Sealed Brand New`,
+            title: `${make} Genuine Parts ${partDescTitle} - Factory Sealed Brand New`,
             brand: `${make} Genuine`,
             manufacturer_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}-85F03`,
             clean_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}85F03`,
@@ -911,9 +941,9 @@ function generateFederatedListingsClient(query, cleanPn, destCountry) {
             id: `partsouq-fed-${Math.floor(Math.random() * 90000 + 10000)}`,
             source_platform: "Partsouq",
             source_listing_id: `PSQ-FED-${Math.floor(Math.random() * 899999 + 100000)}`,
-            source_url: `https://partsouq.com/en/part/${cleanPn || `${make.substring(0,3).toUpperCase()}85F04`}`,
+            source_url: `https://partsouq.com/en/search/all?q=${encPnOrTarget}`,
             source_logo_url: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=100&h=100&fit=crop",
-            title: `${make} Genuine OEM ${cleanQ} (Factory Boxed)`,
+            title: `${make} Genuine OEM ${partDescTitle} (Factory Boxed)`,
             brand: `${make} Genuine`,
             manufacturer_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}-85F04`,
             clean_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}85F04`,
@@ -936,9 +966,9 @@ function generateFederatedListingsClient(query, cleanPn, destCountry) {
             id: `megazip-fed-${Math.floor(Math.random() * 90000 + 10000)}`,
             source_platform: "Megazip",
             source_listing_id: `MGZ-FED-${Math.floor(Math.random() * 899999 + 100000)}`,
-            source_url: `https://www.megazip.net/zapchasti-dlya/${(make || "nissan").toLowerCase().replace(/[^a-z0-9]/g, "")}/${(cleanPn || `${(make || "nissan").toLowerCase().replace(/[^a-z0-9]/g, "")}85f05`).toLowerCase().replace(/[^a-z0-9]/g, "")}`,
+            source_url: `https://www.megazip.net/search?q=${encPnOrTarget}`,
             source_logo_url: "https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=100&h=100&fit=crop",
-            title: `Genuine OEM ${make} ${cleanQ} Assembly`,
+            title: `Genuine OEM ${make} ${partDescTitle} Assembly`,
             brand: `${make} OEM`,
             manufacturer_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}-85F05`,
             clean_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}85F05`,
@@ -961,9 +991,9 @@ function generateFederatedListingsClient(query, cleanPn, destCountry) {
             id: `autodoc-fed-${Math.floor(Math.random() * 90000 + 10000)}`,
             source_platform: "AutoDoc",
             source_listing_id: `ATD-${Math.floor(Math.random() * 8999999 + 1000000)}`,
-            source_url: `https://www.autodoc.de/hella/${Math.floor(Math.random() * 8999999 + 1000000)}`,
+            source_url: `https://www.autodoc.de/search?keyword=${encPnOrTarget}`,
             source_logo_url: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=100&h=100&fit=crop",
-            title: `OES Replacement ${cleanQ} for ${make} ${model}`,
+            title: `OES Replacement ${partDescTitle} for ${make} ${model}`,
             brand: "Hella / Valeo OES",
             manufacturer_part_number: cleanPn || "OES-88210",
             clean_part_number: cleanPn || "OES88210",
@@ -986,9 +1016,9 @@ function generateFederatedListingsClient(query, cleanPn, destCountry) {
             id: `bparts-fed-${Math.floor(Math.random() * 90000 + 10000)}`,
             source_platform: "B-Parts",
             source_listing_id: `BPT-${Math.floor(Math.random() * 8999999 + 1000000)}`,
-            source_url: `https://www.b-parts.com/auto-parts/${Math.floor(Math.random() * 8999999 + 1000000)}`,
+            source_url: `https://www.b-parts.com/auto-parts/search?q=${encTarget}`,
             source_logo_url: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=100&h=100&fit=crop",
-            title: `Certified OEM Recycled ${make} ${model} ${cleanQ}`,
+            title: `Certified OEM Recycled ${make} ${model} ${partDescTitle}`,
             brand: `${make} OEM`,
             manufacturer_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}-85F07`,
             clean_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}85F07`,
@@ -1011,9 +1041,9 @@ function generateFederatedListingsClient(query, cleanPn, destCountry) {
             id: `ali-fed-1-${Math.floor(Math.random() * 90000 + 10000)}`,
             source_platform: "AliExpress",
             source_listing_id: `ALI-100500${Math.floor(Math.random() * 89999999 + 10000000)}`,
-            source_url: `https://www.aliexpress.com/item/100500${Math.floor(Math.random() * 89999999 + 10000000)}.html`,
+            source_url: `https://www.aliexpress.com/wholesale?SearchText=${encTarget}`,
             source_logo_url: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop",
-            title: `Factory Direct ${cleanQ} for ${make} ${model} (OEM Spec Fit)`,
+            title: `Factory Direct ${partDescTitle} for ${make} ${model} (OEM Spec Fit)`,
             brand: "AliExpress Direct",
             manufacturer_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}-AL991`,
             clean_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}AL991`,
@@ -1036,9 +1066,9 @@ function generateFederatedListingsClient(query, cleanPn, destCountry) {
             id: `ali-fed-2-${Math.floor(Math.random() * 90000 + 10000)}`,
             source_platform: "AliExpress",
             source_listing_id: `ALI-100500${Math.floor(Math.random() * 89999999 + 10000000)}`,
-            source_url: `https://www.aliexpress.com/item/100500${Math.floor(Math.random() * 89999999 + 10000000)}.html`,
+            source_url: `https://www.aliexpress.com/wholesale?SearchText=${encTarget}`,
             source_logo_url: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop",
-            title: `Upgraded Performance ${cleanQ} for ${make} ${model} (High Durability)`,
+            title: `Upgraded Performance ${partDescTitle} for ${make} ${model} (High Durability)`,
             brand: "AliExpress Direct",
             manufacturer_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}-AL992`,
             clean_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}AL992`,
@@ -1061,9 +1091,9 @@ function generateFederatedListingsClient(query, cleanPn, destCountry) {
             id: `ali-fed-3-${Math.floor(Math.random() * 90000 + 10000)}`,
             source_platform: "AliExpress",
             source_listing_id: `ALI-100500${Math.floor(Math.random() * 89999999 + 10000000)}`,
-            source_url: `https://www.aliexpress.com/item/100500${Math.floor(Math.random() * 89999999 + 10000000)}.html`,
+            source_url: `https://www.aliexpress.com/wholesale?SearchText=${encTarget}`,
             source_logo_url: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100&h=100&fit=crop",
-            title: `High Precision Direct Fit ${cleanQ} Module for ${make} ${model}`,
+            title: `High Precision Direct Fit ${partDescTitle} Module for ${make} ${model}`,
             brand: "AliExpress Direct",
             manufacturer_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}-AL993`,
             clean_part_number: cleanPn || `${make.substring(0,3).toUpperCase()}AL993`,
@@ -1078,6 +1108,12 @@ function generateFederatedListingsClient(query, cleanPn, destCountry) {
             buy_now_price: 45.00,
             currency: "USD",
             seller_name: "GlobalAuto_Sensors_Direct",
+            seller_rating: 4.78,
+            seller_country: "CN",
+            shipping: { hs_code: "8512.20.00", hazmat_class: hazmat, ships_worldwide: true, base_shipping_cost_usd: 12.0 }
+        }
+    ];
+}
             seller_rating: 4.78,
             seller_country: "CN",
             shipping: { hs_code: "8512.20.00", hazmat_class: hazmat, ships_worldwide: true, base_shipping_cost_usd: 12.0 }
